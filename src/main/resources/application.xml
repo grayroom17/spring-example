@@ -3,6 +3,10 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="driver" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="PostgresDriver"/>
+    </bean>
+
     <bean class="com.example.spring.database.utils.ConnectionPool" id="pool1" name="p1,pl1">
         <constructor-arg index="0" type="java.lang.String" value="postgres"/>
         <constructor-arg index="1" type="java.lang.Integer" value="10"/>
@@ -10,12 +14,14 @@
             <map>
                 <entry key="url" value="postgresurl"/>
                 <entry key="password" value="123"/>
+                <entry key="driver" value-ref="driver"/>
             </map>
         </constructor-arg>
         <constructor-arg type="java.util.List" index="2">
             <list>
                 <value>--arg1=value1</value>
                 <value>--arg2=value2</value>
+                <ref bean="driver"/>
             </list>
         </constructor-arg>
     </bean>
@@ -34,6 +40,13 @@
                 <entry key="password" value="123"/>
             </map>
         </constructor-arg>
+    </bean>
+
+    <bean id="companyRepository1" class="com.example.spring.database.repository.CompanyRepository">
+        <constructor-arg ref="pool1"/>
+    </bean>
+    <bean id="companyRepository2" factory-method="of" class="com.example.spring.database.repository.CompanyRepository">
+        <constructor-arg ref="pool2"/>
     </bean>
 
 </beans>
