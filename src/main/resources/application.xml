@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean class="com.example.spring.database.utils.ConnectionPool" id="pool1" name="p1,pl1">
+        <constructor-arg index="0" type="java.lang.String" value="postgres"/>
+        <constructor-arg index="1" type="java.lang.Integer" value="10"/>
+        <constructor-arg type="java.util.Map" index="3">
+            <map>
+                <entry key="url" value="postgresurl"/>
+                <entry key="password" value="123"/>
+            </map>
+        </constructor-arg>
+        <constructor-arg type="java.util.List" index="2">
+            <list>
+                <value>--arg1=value1</value>
+                <value>--arg2=value2</value>
+            </list>
+        </constructor-arg>
+    </bean>
+    <bean class="com.example.spring.database.utils.ConnectionPool" id="pool2" name="p2,pl2">
+        <constructor-arg value="postgres"/>
+        <constructor-arg value="10"/>
+        <constructor-arg>
+            <list>
+                <value>--arg1=value1</value>
+                <value>--arg2=value2</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg>
+            <map>
+                <entry key="url" value="postgresurl"/>
+                <entry key="password" value="123"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+</beans>
