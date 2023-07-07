@@ -9,7 +9,8 @@ public class ApplicationRunner {
 
     public static void main(String[] args) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("application.xml");
-        log.info(">>>>>>>>> " + context.getBean("pool1", ConnectionPool.class) + " <<<<<<<<<<<");
+        ConnectionPool connectionPool = context.getBean("pool1", ConnectionPool.class);
+        log.info(">>>>>>>>> " + connectionPool + " <<<<<<<<<<<");
     }
 
 }
