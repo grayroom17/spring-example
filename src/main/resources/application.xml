@@ -11,11 +11,7 @@
         <constructor-arg index="0" type="java.lang.String" value="postgres"/>
         <constructor-arg index="1" type="java.lang.Integer" value="10"/>
         <constructor-arg type="java.util.Map" index="3">
-            <map>
-                <entry key="url" value="postgresurl"/>
-                <entry key="password" value="123"/>
-                <entry key="driver" value-ref="driver"/>
-            </map>
+            <null/>
         </constructor-arg>
         <constructor-arg type="java.util.List" index="2">
             <list>
@@ -24,6 +20,13 @@
                 <ref bean="driver"/>
             </list>
         </constructor-arg>
+        <property name="properties">
+            <map>
+                <entry key="url" value="postgresurl"/>
+                <entry key="password" value="123"/>
+                <entry key="driver" value-ref="driver"/>
+            </map>
+        </property>
     </bean>
     <bean class="com.example.spring.database.utils.ConnectionPool" id="pool2" name="p2,pl2">
         <constructor-arg value="postgres"/>
