@@ -8,14 +8,25 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 @Slf4j
 public class ApplicationRunner {
 
+    private static String formattedString = ">>>>>>>>> %s <<<<<<<<<<<";
+
     public static void main(String[] args) {
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("application.xml");
+        CompanyRepository companyRepository;
+        try (ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("application.xml")) {
 
-        ConnectionPool connectionPool = context.getBean("pool1", ConnectionPool.class);
-        log.info(">>>>>>>>> " + connectionPool + " <<<<<<<<<<<");
+            ConnectionPool singletonConnectionPool1 = context.getBean("pool1", ConnectionPool.class);
+            ConnectionPool singletonConnectionPool2 = context.getBean("pool1", ConnectionPool.class);
+            log.info(formattedString.formatted(singletonConnectionPool1));
+            log.info(formattedString.formatted(singletonConnectionPool2));
 
-        CompanyRepository companyRepository = context.getBean("companyRepository2", CompanyRepository.class);
-        log.info(">>>>>>>>> " + companyRepository + " <<<<<<<<<<<");
+            ConnectionPool prototypeConnectionPool1 = context.getBean("pool2", ConnectionPool.class);
+            ConnectionPool prototypeConnectionPool2 = context.getBean("pool2", ConnectionPool.class);
+            log.info(formattedString.formatted(prototypeConnectionPool1));
+            log.info(formattedString.formatted(prototypeConnectionPool2));
+
+            companyRepository = context.getBean("companyRepository2", CompanyRepository.class);
+            log.info(formattedString.formatted(companyRepository));
+        }
     }
 
 }
