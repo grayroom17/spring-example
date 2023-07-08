@@ -28,7 +28,7 @@
             </map>
         </property>
     </bean>
-    <bean class="com.example.spring.database.utils.ConnectionPool" id="pool2" name="p2,pl2">
+    <bean class="com.example.spring.database.utils.ConnectionPool" id="pool2" name="p2,pl2" scope="prototype">
         <constructor-arg value="postgres"/>
         <constructor-arg value="10"/>
         <constructor-arg>
