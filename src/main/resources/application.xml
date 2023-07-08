@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+
+    <context:property-placeholder location="classpath:application.properties"/>
+    <!--    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">-->
+    <!--        <property name="locations" value="application.properties"/>-->
+    <!--    </bean>-->
 
     <bean id="driver" class="java.lang.String">
-        <constructor-arg type="java.lang.String" value="PostgresDriver"/>
+        <constructor-arg type="java.lang.String" value="${db.driver}"/>
     </bean>
 
     <bean class="com.example.spring.database.utils.ConnectionPool" id="pool1" name="p1,pl1"
@@ -31,8 +41,8 @@
         </property>
     </bean>
     <bean class="com.example.spring.database.utils.ConnectionPool" id="pool2" name="p2,pl2" scope="prototype">
-        <constructor-arg value="postgres"/>
-        <constructor-arg value="10"/>
+        <constructor-arg index="0" type="java.lang.String" value="${db.username}"/>
+        <constructor-arg index="1" type="java.lang.Integer" value="${db.pool.size}"/>
         <constructor-arg>
             <list>
                 <value>--arg1=value1</value>
@@ -43,6 +53,12 @@
             <map>
                 <entry key="url" value="postgresurl"/>
                 <entry key="password" value="123"/>
+                <entry key="test1" value="#{driver.length()>10}"/>
+                <entry key="test2" value="#{driver.substring(3)}"/>
+                <entry key="test3" value="#{driver.length() > T(Math).random()*10}"/>
+                <entry key="test4" value="#{'${db.hosts}'.split(',')}"/>
+                <entry key="test5" value="#{new String('Hello world!')}"/>
+                <entry key="test6" value="#{systemProperties['user.name']}"/>
             </map>
         </constructor-arg>
     </bean>
