@@ -22,6 +22,8 @@
     <bean class="com.example.spring.bfpp.LogBeanFactoryPostProcessors"/>
     <bean class="com.example.spring.bfpp.VerifyPropertiesBeanFactoryPostProcessors"/>
 
+    <bean class="com.example.spring.bpp.InjectBeanPostProcessor"/>
+
     <bean id="driver" class="java.lang.String">
         <constructor-arg type="java.lang.String" value="${db.driver}"/>
     </bean>
@@ -80,5 +82,10 @@
     <bean id="companyRepository2" factory-method="of" class="com.example.spring.database.repository.CompanyRepository">
         <constructor-arg ref="pool2"/>
     </bean>
+
+    <bean class="com.example.spring.database.repository.UserRepository">
+        <constructor-arg ref="pool1"/>
+    </bean>
+    <bean class="com.example.spring.database.repository.DepartmentRepository" id="departmentRepository"/>
 
 </beans>

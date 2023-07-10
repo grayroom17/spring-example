@@ -3,14 +3,17 @@ package com.example.spring.service;
 
 import com.example.spring.database.repository.CompanyRepository;
 import com.example.spring.database.repository.UserRepository;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final CompanyRepository companyRepository;
+    UserRepository userRepository;
+    CompanyRepository companyRepository;
 
     public UserService(UserRepository userRepository,
-            CompanyRepository companyRepository) {
+                       CompanyRepository companyRepository) {
         this.userRepository = userRepository;
         this.companyRepository = companyRepository;
     }

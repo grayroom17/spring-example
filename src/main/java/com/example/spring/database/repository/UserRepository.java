@@ -1,13 +1,14 @@
 package com.example.spring.database.repository;
 
 import com.example.spring.database.utils.ConnectionPool;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class UserRepository {
 
-    private final ConnectionPool connectionPool;
-
-    public UserRepository(ConnectionPool connectionPool) {
-        this.connectionPool = connectionPool;
-    }
+    ConnectionPool connectionPool;
 
 }
