@@ -7,11 +7,17 @@
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
-
+    <!--    Бин для чтения properties файлов-->
     <context:property-placeholder location="classpath:application.properties"/>
+    <!--    Второй способ объявить property-placeholder в виде бина-->
     <!--    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">-->
     <!--        <property name="locations" value="application.properties"/>-->
     <!--    </bean>-->
+
+    <!--    Бин для обработки аннотаций в бинах-->
+    <context:annotation-config/>
+    <!--    Второй способ объявить property-placeholder в виде бина-->
+    <!--    <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>-->
 
     <bean class="com.example.spring.bfpp.LogBeanFactoryPostProcessors"/>
     <bean class="com.example.spring.bfpp.VerifyPropertiesBeanFactoryPostProcessors"/>
@@ -20,9 +26,11 @@
         <constructor-arg type="java.lang.String" value="${db.driver}"/>
     </bean>
 
-    <bean class="com.example.spring.database.utils.ConnectionPool" id="pool1" name="p1,pl1"
-          init-method="init"
-          destroy-method="preDestroy">
+    <bean class="com.example.spring.database.utils.ConnectionPool" id="pool1" name="p1,pl1">
+        <!--указание на init и destroy методы переделал на аннотации-->
+        <!--init-method="init"
+        destroy-method="preDestroy"
+        >-->
         <constructor-arg index="0" type="java.lang.String" value="postgres"/>
         <constructor-arg index="1" type="java.lang.Integer" value="10"/>
         <constructor-arg type="java.util.Map" index="3">
