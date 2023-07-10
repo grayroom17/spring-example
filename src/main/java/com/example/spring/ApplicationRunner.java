@@ -1,6 +1,7 @@
 package com.example.spring;
 
 import com.example.spring.database.repository.CompanyRepository;
+import com.example.spring.database.repository.DepartmentRepository;
 import com.example.spring.database.utils.ConnectionPool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -26,6 +27,9 @@ public class ApplicationRunner {
 
             companyRepository = context.getBean("companyRepository2", CompanyRepository.class);
             log.info(formattedString.formatted(companyRepository));
+
+            DepartmentRepository departmentRepository = context.getBean(DepartmentRepository.class);
+            log.info(formattedString.formatted(departmentRepository));
         }
     }
 

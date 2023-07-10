@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ConnectionPool implements InitializingBean, DisposableBean {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(ConnectionPool.class);
@@ -41,6 +44,7 @@ public class ConnectionPool implements InitializingBean, DisposableBean {
         log.info("afterPropertiesSet callback");
     }
 
+    @PostConstruct
     private void init() {
         log.info("ConnectionPool preConstruct callback");
     }
@@ -50,6 +54,7 @@ public class ConnectionPool implements InitializingBean, DisposableBean {
         log.info("on destruction callback");
     }
 
+    @PreDestroy
     private void preDestroy() {
         log.info("ConnectionPool postDestroy callback");
     }
