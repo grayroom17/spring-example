@@ -1,7 +1,8 @@
 package com.example.spring;
 
 import com.example.spring.database.repository.CompanyRepository;
-import com.example.spring.database.repository.DepartmentRepository;
+import com.example.spring.database.repository.CrudRepository;
+import com.example.spring.database.repository.UserService;
 import com.example.spring.database.utils.ConnectionPool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -28,8 +29,12 @@ public class ApplicationRunner {
             companyRepository = context.getBean("companyRepository2", CompanyRepository.class);
             log.info(formattedString.formatted(companyRepository));
 
-            DepartmentRepository departmentRepository = context.getBean(DepartmentRepository.class);
+            CrudRepository departmentRepository = context.getBean("departmentRepository", CrudRepository.class);
             log.info(formattedString.formatted(departmentRepository));
+            log.info(departmentRepository.findById(1).toString());
+
+            UserService userService = context.getBean("userService", UserService.class);
+            log.info(formattedString.formatted(userService));
         }
     }
 

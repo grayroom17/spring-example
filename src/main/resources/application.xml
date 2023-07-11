@@ -19,11 +19,6 @@
     <!--    Второй способ объявить property-placeholder в виде бина-->
     <!--    <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>-->
 
-    <bean class="com.example.spring.bfpp.LogBeanFactoryPostProcessors"/>
-    <bean class="com.example.spring.bfpp.VerifyPropertiesBeanFactoryPostProcessors"/>
-
-    <bean class="com.example.spring.bpp.InjectBeanPostProcessor"/>
-
     <bean id="driver" class="java.lang.String">
         <constructor-arg type="java.lang.String" value="${db.driver}"/>
     </bean>
@@ -83,9 +78,17 @@
         <constructor-arg ref="pool2"/>
     </bean>
 
-    <bean class="com.example.spring.database.repository.UserRepository">
+    <bean class="com.example.spring.bfpp.LogBeanFactoryPostProcessors"/>
+    <bean class="com.example.spring.bfpp.VerifyPropertiesBeanFactoryPostProcessors"/>
+
+    <bean class="com.example.spring.bpp.InjectBeanPostProcessor"/>
+    <bean class="com.example.spring.bpp.TransactionBeanPostProcessor"/>
+    <bean class="com.example.spring.bpp.AuditingBeanPostProcessor"/>
+
+    <bean class="com.example.spring.database.repository.UserRepository" id="userRepository">
         <constructor-arg ref="pool1"/>
     </bean>
     <bean class="com.example.spring.database.repository.DepartmentRepository" id="departmentRepository"/>
+    <bean class="com.example.spring.database.repository.UserService" id="userService"/>
 
 </beans>
