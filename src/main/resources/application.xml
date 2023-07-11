@@ -85,9 +85,10 @@
     <bean class="com.example.spring.bpp.TransactionBeanPostProcessor"/>
     <bean class="com.example.spring.bpp.AuditingBeanPostProcessor"/>
 
-    <bean class="com.example.spring.database.repository.UserRepository">
+    <bean class="com.example.spring.database.repository.UserRepository" id="userRepository">
         <constructor-arg ref="pool1"/>
     </bean>
     <bean class="com.example.spring.database.repository.DepartmentRepository" id="departmentRepository"/>
+    <bean class="com.example.spring.database.repository.UserService" id="userService"/>
 
 </beans>
