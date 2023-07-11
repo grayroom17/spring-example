@@ -1,9 +1,8 @@
 package com.example.spring;
 
 import com.example.spring.database.repository.CompanyRepository;
-import com.example.spring.database.repository.CrudRepository;
-import com.example.spring.database.repository.UserService;
 import com.example.spring.database.utils.ConnectionPool;
+import com.example.spring.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -17,21 +16,10 @@ public class ApplicationRunner {
         try (ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("application.xml")) {
 
             ConnectionPool singletonConnectionPool1 = context.getBean("pool1", ConnectionPool.class);
-            ConnectionPool singletonConnectionPool2 = context.getBean("pool1", ConnectionPool.class);
             log.info(formattedString.formatted(singletonConnectionPool1));
-            log.info(formattedString.formatted(singletonConnectionPool2));
 
-            ConnectionPool prototypeConnectionPool1 = context.getBean("pool2", ConnectionPool.class);
-            ConnectionPool prototypeConnectionPool2 = context.getBean("pool2", ConnectionPool.class);
-            log.info(formattedString.formatted(prototypeConnectionPool1));
-            log.info(formattedString.formatted(prototypeConnectionPool2));
-
-            companyRepository = context.getBean("companyRepository2", CompanyRepository.class);
+            companyRepository = context.getBean("companyRepository", CompanyRepository.class);
             log.info(formattedString.formatted(companyRepository));
-
-            CrudRepository departmentRepository = context.getBean("departmentRepository", CrudRepository.class);
-            log.info(formattedString.formatted(departmentRepository));
-            log.info(departmentRepository.findById(1).toString());
 
             UserService userService = context.getBean("userService", UserService.class);
             log.info(formattedString.formatted(userService));

@@ -4,14 +4,13 @@ import com.example.spring.database.utils.ConnectionPool;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.stereotype.Repository;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@Repository
 public class CompanyRepository {
 
     ConnectionPool connectionPool;
 
-    public static CompanyRepository of(ConnectionPool connectionPool) {
-        return new CompanyRepository(connectionPool);
-    }
 }
