@@ -18,7 +18,7 @@ public class ApplicationRunner {
 //        try (ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("application.xml")) {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfiguration.class)) {
 
-            ConnectionPool singletonConnectionPool1 = context.getBean("pool1", ConnectionPool.class);
+            ConnectionPool singletonConnectionPool1 = context.getBean("pool2", ConnectionPool.class);
             log.info(formattedString.formatted(singletonConnectionPool1));
 
             companyRepository = context.getBean("companyRepository", CompanyRepository.class);
