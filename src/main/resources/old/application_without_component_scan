@@ -1,0 +1,96 @@
+<!--
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    &lt;!&ndash;    Бин для чтения properties файлов&ndash;&gt;
+    <context:property-placeholder location="classpath:application.properties"/>
+    &lt;!&ndash;    Второй способ объявить property-placeholder в виде бина&ndash;&gt;
+    &lt;!&ndash;    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">&ndash;&gt;
+    &lt;!&ndash;        <property name="locations" value="application.properties"/>&ndash;&gt;
+    &lt;!&ndash;    </bean>&ndash;&gt;
+
+    &lt;!&ndash;    Бин для обработки аннотаций в бинах&ndash;&gt;
+    <context:annotation-config/>
+    &lt;!&ndash;    Второй способ объявить property-placeholder в виде бина&ndash;&gt;
+    &lt;!&ndash;    <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>&ndash;&gt;
+
+    <bean id="driver" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="${db.driver}"/>
+    </bean>
+
+    <bean class="com.example.spring.database.utils.ConnectionPool" id="pool1" name="p1,pl1">
+        &lt;!&ndash;указание на init и destroy методы переделал на аннотации&ndash;&gt;
+        &lt;!&ndash;init-method="init"
+        destroy-method="preDestroy"
+        >&ndash;&gt;
+        <constructor-arg index="0" type="java.lang.String" value="postgres"/>
+        <constructor-arg index="1" type="java.lang.Integer" value="10"/>
+        <constructor-arg type="java.util.Map" index="3">
+            <null/>
+        </constructor-arg>
+        <constructor-arg type="java.util.List" index="2">
+            <list>
+                <value>&#45;&#45;arg1=value1</value>
+                <value>&#45;&#45;arg2=value2</value>
+                <ref bean="driver"/>
+            </list>
+        </constructor-arg>
+        <property name="properties">
+            <map>
+                <entry key="url" value="postgresurl"/>
+                <entry key="password" value="123"/>
+                <entry key="driver" value-ref="driver"/>
+            </map>
+        </property>
+    </bean>
+    <bean class="com.example.spring.database.utils.ConnectionPool" id="pool2" name="p2,pl2" scope="prototype">
+        <constructor-arg index="0" type="java.lang.String" value="${db.username}"/>
+        <constructor-arg index="1" type="java.lang.Integer" value="${db.pool.size}"/>
+        <constructor-arg>
+            <list>
+                <value>&#45;&#45;arg1=value1</value>
+                <value>&#45;&#45;arg2=value2</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg>
+            <map>
+                <entry key="url" value="postgresurl"/>
+                <entry key="password" value="123"/>
+                <entry key="test1" value="#{driver.length()>10}"/>
+                <entry key="test2" value="#{driver.substring(3)}"/>
+                <entry key="test3" value="#{driver.length() > T(Math).random()*10}"/>
+                <entry key="test4" value="#{'${db.hosts}'.split(',')}"/>
+                <entry key="test5" value="#{new String('Hello world!')}"/>
+                <entry key="test6" value="#{systemProperties['user.name']}"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="companyRepository1" class="com.example.spring.database.repository.CompanyRepository">
+        <constructor-arg ref="pool1"/>
+    </bean>
+    <bean id="companyRepository2" factory-method="of" class="com.example.spring.database.repository.CompanyRepository">
+        <constructor-arg ref="pool2"/>
+    </bean>
+
+    <bean class="com.example.spring.bfpp.LogBeanFactoryPostProcessors"/>
+    <bean class="com.example.spring.bfpp.VerifyPropertiesBeanFactoryPostProcessors"/>
+
+    <bean class="com.example.spring.bpp.InjectBeanPostProcessor"/>
+    <bean class="com.example.spring.bpp.TransactionBeanPostProcessor"/>
+    <bean class="com.example.spring.bpp.AuditingBeanPostProcessor"/>
+
+    <bean class="com.example.spring.database.repository.UserRepository" id="userRepository">
+        <constructor-arg ref="pool1"/>
+    </bean>
+    <bean class="com.example.spring.database.repository.DepartmentRepository" id="departmentRepository"/>
+    <bean class="com.example.spring.service.UserService" id="userService"/>
+
+</beans>
+-->
