@@ -9,6 +9,9 @@
 
     <context:component-scan base-package="com.example.spring"/>
 
+    <!--    Бин для чтения properties файлов-->
+    <context:property-placeholder location="classpath:application.properties"/>
+
     <!--   Чтобы убрать данный бин из xml, нужно его переопределить через java конфигурацию.
     С помощью аннотации @Component не получится, т.к. String - это класс java библиотеки-->
     <bean id="driver" class="java.lang.String">
