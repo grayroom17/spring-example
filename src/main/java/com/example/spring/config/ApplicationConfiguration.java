@@ -20,6 +20,11 @@ import static org.springframework.context.annotation.FilterType.*;
 //Таким образом создается комбинированная конфигурация из нескольких конфигурационных java классов
 @Import(WebConfiguration.class)
 
+//создает оригинальные объекты бинов
+//@Configuration(proxyBeanMethods = false)
+
+// По умолчанию при создании бины оборачиваются в прокси объекты, что позволяет делать вызов конфигурационного метода бина
+//несколько раз. Первый раз прокси инициализирует объект, а последующие разы просто возвращает его. См. userRepository2()
 @Configuration
 @PropertySource("classpath:application.properties")
 @ComponentScan(
@@ -32,14 +37,27 @@ import static org.springframework.context.annotation.FilterType.*;
         })
 public class ApplicationConfiguration {
 
-    @Bean
-    public ConnectionPool pool2(@Value("${db.username}") String username) {
+    @Bean("pool2")
+    public ConnectionPool connectionPool(@Value("${db.username}") String username) {
         return new ConnectionPool(username, 20);
+    }
+
+    @Bean
+    public ConnectionPool pool3() {
+        return new ConnectionPool("test-user", 25);
     }
 
     @Bean
     public UserRepository userRepository2(ConnectionPool pool2) {
         return new UserRepository(pool2);
+    }
+
+    @Bean
+    public UserRepository userRepository2() {
+        ConnectionPool pool1 = pool3();
+        ConnectionPool pool2 = pool3();
+        ConnectionPool pool3 = pool3();
+        return new UserRepository(pool3());
     }
 
 }
