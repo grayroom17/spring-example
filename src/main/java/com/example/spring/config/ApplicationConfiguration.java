@@ -47,6 +47,14 @@ public class ApplicationConfiguration {
         return new ConnectionPool("test-user", 25);
     }
 
+    //бин будет загружен в контекст, только когда активным профилем будет НЕ prod
+    //@Profile("!prod")
+
+    //бин будет загружен в контекст, только когда активным профилем будет prod или web
+    //@Profile("prod | web")
+
+    //бин будет загружен в контекст, только когда активным профилем будет prod
+    @Profile("prod")
     @Bean
     public UserRepository userRepository2(ConnectionPool pool2) {
         return new UserRepository(pool2);
@@ -58,6 +66,13 @@ public class ApplicationConfiguration {
         ConnectionPool pool2 = pool3();
         ConnectionPool pool3 = pool3();
         return new UserRepository(pool3());
+    }
+
+    //бин будет загружен в контекст, только когда активными профилями будут prod и web
+    @Profile("prod & web")
+    @Bean
+    public UserRepository userRepository3(ConnectionPool pool2) {
+        return new UserRepository(pool2);
     }
 
 }
