@@ -2,8 +2,8 @@ package com.example.spring;
 
 import com.example.spring.config.ApplicationConfiguration;
 import com.example.spring.database.repository.CompanyRepository;
-import com.example.spring.database.repository.UserRepository;
 import com.example.spring.database.utils.ConnectionPool;
+import com.example.spring.service.DepartmentService;
 import com.example.spring.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -27,6 +27,9 @@ public class ApplicationRunner {
 
             UserService userService = context.getBean("userService", UserService.class);
             log.info(formattedString.formatted(userService));
+
+            DepartmentService departmentService = context.getBean("departmentService", DepartmentService.class);
+            log.info(departmentService.findById(1).toString());
         }
     }
 
