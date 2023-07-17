@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class EntityListener {
 
-    @EventListener
+    @EventListener(condition = "#root.args[0].accessType.name() == 'READ'")
     public void acceptEntity(EntityEvent entityEvent) {
         log.info("Entity: " + entityEvent);
     }
