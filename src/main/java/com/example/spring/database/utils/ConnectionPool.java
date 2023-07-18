@@ -1,13 +1,13 @@
 package com.example.spring.database.utils;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j

@@ -4,6 +4,7 @@ import com.example.spring.bpp.Auditing;
 import com.example.spring.bpp.Transaction;
 import com.example.spring.database.utils.ConnectionPool;
 import com.example.spring.entity.Department;
+import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 

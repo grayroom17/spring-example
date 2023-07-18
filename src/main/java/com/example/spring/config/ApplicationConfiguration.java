@@ -61,7 +61,7 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public UserRepository userRepository2() {
+    public UserRepository userRepository4() {
         ConnectionPool pool1 = pool3();
         ConnectionPool pool2 = pool3();
         ConnectionPool pool3 = pool3();
