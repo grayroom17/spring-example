@@ -1,15 +1,13 @@
 package com.example.spring.config;
 
-import com.example.spring.database.repository.CrudRepository;
 import com.example.spring.database.repository.UserRepository;
 import com.example.spring.database.utils.ConnectionPool;
 import com.example.web.config.WebConfiguration;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.*;
-import org.springframework.context.annotation.ComponentScan.Filter;
-import org.springframework.stereotype.Component;
-
-import static org.springframework.context.annotation.FilterType.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Profile;
 
 //аннотацией @ImportResource можно добавить конфигурацию из xml файла
 //Таким образом можно создать комбинированную конфигурацию(java based + xml based)
@@ -26,15 +24,21 @@ import static org.springframework.context.annotation.FilterType.*;
 // По умолчанию при создании бины оборачиваются в прокси объекты, что позволяет делать вызов конфигурационного метода бина
 //несколько раз. Первый раз прокси инициализирует объект, а последующие разы просто возвращает его. См. userRepository2()
 @Configuration
-@PropertySource("classpath:application.properties")
-@ComponentScan(
+
+//@PropertySource не нужен, т.к @SpringBootApplication загрузит все properties(или yaml) файлы, которые начинаются с application
+// и лежат в том же пакете что и @SpringBootApplication.
+//@PropertySource("classpath:application.properties")
+
+//@ComponentScan не нужен после переезда на Spring Boot, т.к. @SpringBootApplication содержит @ComponentScan
+// и сканирует пакет в котором находится.
+/*@ComponentScan(
         basePackages = "com.example.spring",
         useDefaultFilters = false,
         includeFilters = {
                 @Filter(type = ANNOTATION, value = Component.class),
                 @Filter(type = ASSIGNABLE_TYPE, value = CrudRepository.class),
                 @Filter(type = REGEX, pattern = "com\\..+Repository")
-        })
+        })*/
 public class ApplicationConfiguration {
 
     @Bean("pool2")
