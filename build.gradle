@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.1.1'
     id "io.spring.dependency-management" version "1.1.2"
+    id "io.freefair.lombok" version "8.1.0"
 }
 
 group 'org.example'
@@ -25,10 +26,6 @@ dependencies {
 //    implementation 'org.slf4j:slf4j-simple:2.0.7'
 //  версию можно не указывать, т.к. она подтянется из spring.dependency-management
     implementation 'org.postgresql:postgresql'
-
-    implementation 'org.projectlombok:lombok:1.18.28'
-    annotationProcessor 'org.projectlombok:lombok:1.18.28'
-
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0-M1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0-M1'
