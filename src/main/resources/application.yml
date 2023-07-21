@@ -23,3 +23,6 @@ logging:
   level:
     root: warn
     com.example.spring.database.utils.ConnectionPool: info
+  file:
+#    path: ./log/log/
+    name: ./log/spring-example.log
