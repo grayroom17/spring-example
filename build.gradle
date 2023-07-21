@@ -27,9 +27,8 @@ dependencies {
 //  версию можно не указывать, т.к. она подтянется из spring.dependency-management
     implementation 'org.postgresql:postgresql'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0-M1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0-M1'
-}
+    testImplementation ('org.springframework.boot:spring-boot-starter-test')
+ }
 
 test {
     useJUnitPlatform()
