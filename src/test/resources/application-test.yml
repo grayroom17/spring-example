@@ -1,0 +1,9 @@
+db:
+  username: test
+  password: test
+
+spring:
+  test:
+    constructor:
+      autowire:
+        mode:
