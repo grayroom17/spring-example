@@ -1,3 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        hbm2ddl:
+          auto: validate
+
+
 db:
   username: postgres
   password: postgres
@@ -21,8 +36,8 @@ db:
 
 logging:
   level:
-    root: warn
-    com.example.spring.database.utils.ConnectionPool: info
+    root: info
+    com.example.spring.database.utils.ConnectionPool: warn
   file:
-#    path: ./log/log/
+    #    path: ./log/log/
     name: ./log/spring-example.log
