@@ -1,18 +1,31 @@
 package com.example.spring.database.repository;
 
-import com.example.spring.database.utils.ConnectionPool;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.example.spring.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequiredArgsConstructor
-@Repository
-public class UserRepository {
+import java.util.List;
 
-    @Qualifier("pool1")
-    ConnectionPool connectionPool;
+
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+
+    @Query("""
+            select u
+            from User u
+            where u.firstname like %:firstname%
+            and u.lastname like %:lastname%
+            """)
+    List<User> findAllByFirstnameContainingAndLastnameContaining(String firstname, String lastname);
+
+
+    @Query(nativeQuery = true,
+            value = """
+                    select *
+                    from users u
+                    where u.username = :username
+                    """)
+    List<User> findAllByUsername(String username);
 
 }
