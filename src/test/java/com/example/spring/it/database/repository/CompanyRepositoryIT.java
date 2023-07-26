@@ -89,4 +89,10 @@ class CompanyRepositoryIT extends BaseIT {
 
     }
 
+    @Test
+    void checkFindByQueries() {
+        assertNotNull(companyRepository.findByName("Google"));
+        assertNotNull(companyRepository.findByNameContainingIgnoreCase("a"));
+    }
+
 }
