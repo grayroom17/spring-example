@@ -15,6 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @ToString
+@EqualsAndHashCode
 @Entity
 public class Chat implements BaseEntity<Long> {
 
@@ -25,6 +26,8 @@ public class Chat implements BaseEntity<Long> {
     @Column(unique = true, nullable = false)
     String name;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @Default
     @OneToMany(mappedBy = "chat")
     Set<UserChat> userChats = new HashSet<>();
