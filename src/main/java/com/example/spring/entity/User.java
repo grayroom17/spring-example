@@ -16,6 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "users")
 public class User implements BaseEntity<Long> {
@@ -39,6 +40,8 @@ public class User implements BaseEntity<Long> {
     @ManyToOne(fetch = FetchType.LAZY)
     Company company;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @Default
     @OneToMany(mappedBy = "user")
     Set<UserChat> userChats = new HashSet<>();

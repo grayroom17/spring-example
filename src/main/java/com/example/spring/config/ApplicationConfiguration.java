@@ -1,13 +1,11 @@
 package com.example.spring.config;
 
-import com.example.spring.database.repository.UserRepository;
 import com.example.spring.database.utils.ConnectionPool;
 import com.example.web.config.WebConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Profile;
 
 //аннотацией @ImportResource можно добавить конфигурацию из xml файла
 //Таким образом можно создать комбинированную конфигурацию(java based + xml based)
@@ -56,27 +54,5 @@ public class ApplicationConfiguration {
 
     //бин будет загружен в контекст, только когда активным профилем будет prod или web
     //@Profile("prod | web")
-
-    //бин будет загружен в контекст, только когда активным профилем будет prod
-    @Profile("prod")
-    @Bean
-    public UserRepository userRepository2(ConnectionPool pool2) {
-        return new UserRepository(pool2);
-    }
-
-    @Bean
-    public UserRepository userRepository4() {
-        ConnectionPool pool1 = pool3();
-        ConnectionPool pool2 = pool3();
-        ConnectionPool pool3 = pool3();
-        return new UserRepository(pool3());
-    }
-
-    //бин будет загружен в контекст, только когда активными профилями будут prod и web
-    @Profile("prod & web")
-    @Bean
-    public UserRepository userRepository3(ConnectionPool pool2) {
-        return new UserRepository(pool2);
-    }
 
 }
