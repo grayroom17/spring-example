@@ -1,6 +1,9 @@
 package com.example.spring.it.database.repository;
 
 import com.example.spring.database.repository.UserRepository;
+import com.example.spring.dto.PersonalInfo;
+import com.example.spring.dto.PersonalInfoInterface;
+import com.example.spring.dto.UserFilter;
 import com.example.spring.entity.Role;
 import com.example.spring.entity.User;
 import com.example.spring.it.BaseIT;
@@ -110,6 +113,71 @@ class UserRepositoryIT extends BaseIT {
 
         assertThat(page.getTotalPages()).isEqualTo(3);
         assertThat(page.getTotalElements()).isEqualTo(5);
+    }
+
+    @Transactional
+    @Test
+    void checkNamedEntityGraph() {
+        PageRequest pageable = PageRequest.of(0, 2, Sort.by("id"));
+        Page<User> page = userRepository.getAllBy(pageable);
+        page.forEach(user -> log.info(user.getCompany().toString()));
+    }
+
+    @Transactional
+    @Test
+    void checkEntityGraph() {
+        PageRequest pageable = PageRequest.of(0, 2, Sort.by("id"));
+        Page<User> page = userRepository.getAllUsers(pageable);
+        page.forEach(user -> log.info(user.getCompany().toString()));
+    }
+
+    @Transactional
+    @Test
+    void checkPessimisticRead() {
+        Sort.TypedSort<User> sortBy = Sort.sort(User.class);
+        Sort sort = sortBy.by(User::getFirstname)
+                .and(sortBy.by(User::getLastname));
+        List<User> users = userRepository.getFirst3ByBirthDateBefore(LocalDate.now(), sort.descending());
+        assertThat(users).hasSize(3);
+    }
+
+    @Transactional
+    @Test
+    void checkPessimisticWrite() {
+        Sort.TypedSort<User> sortBy = Sort.sort(User.class);
+        Sort sort = sortBy.by(User::getFirstname)
+                .and(sortBy.by(User::getLastname));
+        List<User> users = userRepository.getTop3ByBirthDateBefore(LocalDate.now(), sort.descending());
+        assertThat(users).hasSize(3);
+    }
+
+    @Transactional
+    @Test
+    void checkProjections() {
+        List<PersonalInfo> result = userRepository.findAllByCompanyId(1);
+        assertThat(result).hasSize(2);
+    }
+
+    @Transactional
+    @Test
+    void checkTypedProjections() {
+        List<PersonalInfo> result = userRepository.findAllByCompanyId(1, PersonalInfo.class);
+        assertThat(result).hasSize(2);
+    }
+
+    @Transactional
+    @Test
+    void checkProjectionsWithInterface() {
+        List<PersonalInfoInterface> result = userRepository.projectionWithInterface(1);
+        assertThat(result).hasSize(2);
+    }
+
+    @Transactional
+    @Test
+    void checkCustomImplementationUserRepository() {
+        UserFilter filter = new UserFilter(null, "%ov%", LocalDate.now());
+        List<User> result = userRepository.findAllByFilter(filter);
+        assertThat(result).hasSize(4);
     }
 
 }

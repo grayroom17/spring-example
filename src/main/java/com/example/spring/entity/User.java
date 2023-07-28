@@ -9,6 +9,8 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+@NamedEntityGraph(name = "User.company",
+        attributeNodes = @NamedAttributeNode("company"))
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter
