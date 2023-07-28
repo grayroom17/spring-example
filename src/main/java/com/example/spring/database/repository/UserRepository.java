@@ -21,7 +21,7 @@ import static org.hibernate.jpa.HibernateHints.HINT_FETCH_SIZE;
 
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long>, FilterUserRepository  {
 
     @Query("""
             select u

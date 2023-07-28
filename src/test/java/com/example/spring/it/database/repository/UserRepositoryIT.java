@@ -3,6 +3,7 @@ package com.example.spring.it.database.repository;
 import com.example.spring.database.repository.UserRepository;
 import com.example.spring.dto.PersonalInfo;
 import com.example.spring.dto.PersonalInfoInterface;
+import com.example.spring.dto.UserFilter;
 import com.example.spring.entity.Role;
 import com.example.spring.entity.User;
 import com.example.spring.it.BaseIT;
@@ -169,6 +170,14 @@ class UserRepositoryIT extends BaseIT {
     void checkProjectionsWithInterface() {
         List<PersonalInfoInterface> result = userRepository.projectionWithInterface(1);
         assertThat(result).hasSize(2);
+    }
+
+    @Transactional
+    @Test
+    void checkCustomImplementationUserRepository() {
+        UserFilter filter = new UserFilter(null, "%ov%", LocalDate.now());
+        List<User> result = userRepository.findAllByFilter(filter);
+        assertThat(result).hasSize(4);
     }
 
 }
