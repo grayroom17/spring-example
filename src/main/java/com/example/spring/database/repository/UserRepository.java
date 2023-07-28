@@ -1,5 +1,7 @@
 package com.example.spring.database.repository;
 
+import com.example.spring.dto.PersonalInfo;
+import com.example.spring.dto.PersonalInfoInterface;
 import com.example.spring.entity.Role;
 import com.example.spring.entity.User;
 import jakarta.persistence.LockModeType;
@@ -76,5 +78,19 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @QueryHints(@QueryHint(name = HINT_FETCH_SIZE, value = "50"))
     List<User> getTop2ByBirthDateBefore(LocalDate birthDate, Sort sort);
+
+    List<PersonalInfo> findAllByCompanyId(Integer companyId);
+
+    <T> List<T> findAllByCompanyId(Integer companyId, Class<T> tClass);
+
+    @Query(nativeQuery = true,
+            value = """
+                    select u.firstname,
+                    u.lastname,
+                    u.birth_date birthDate
+                    from users u
+                    where u.company_id = :companyId
+                    """)
+    List<PersonalInfoInterface> projectionWithInterface(Integer companyId);
 
 }

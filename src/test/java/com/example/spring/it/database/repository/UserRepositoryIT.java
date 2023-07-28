@@ -1,6 +1,8 @@
 package com.example.spring.it.database.repository;
 
 import com.example.spring.database.repository.UserRepository;
+import com.example.spring.dto.PersonalInfo;
+import com.example.spring.dto.PersonalInfoInterface;
 import com.example.spring.entity.Role;
 import com.example.spring.entity.User;
 import com.example.spring.it.BaseIT;
@@ -114,7 +116,7 @@ class UserRepositoryIT extends BaseIT {
 
     @Transactional
     @Test
-    void checkNamedEntityGraph () {
+    void checkNamedEntityGraph() {
         PageRequest pageable = PageRequest.of(0, 2, Sort.by("id"));
         Page<User> page = userRepository.getAllBy(pageable);
         page.forEach(user -> log.info(user.getCompany().toString()));
@@ -122,7 +124,7 @@ class UserRepositoryIT extends BaseIT {
 
     @Transactional
     @Test
-    void checkEntityGraph () {
+    void checkEntityGraph() {
         PageRequest pageable = PageRequest.of(0, 2, Sort.by("id"));
         Page<User> page = userRepository.getAllUsers(pageable);
         page.forEach(user -> log.info(user.getCompany().toString()));
@@ -146,6 +148,27 @@ class UserRepositoryIT extends BaseIT {
                 .and(sortBy.by(User::getLastname));
         List<User> users = userRepository.getTop3ByBirthDateBefore(LocalDate.now(), sort.descending());
         assertThat(users).hasSize(3);
+    }
+
+    @Transactional
+    @Test
+    void checkProjections() {
+        List<PersonalInfo> result = userRepository.findAllByCompanyId(1);
+        assertThat(result).hasSize(2);
+    }
+
+    @Transactional
+    @Test
+    void checkTypedProjections() {
+        List<PersonalInfo> result = userRepository.findAllByCompanyId(1, PersonalInfo.class);
+        assertThat(result).hasSize(2);
+    }
+
+    @Transactional
+    @Test
+    void checkProjectionsWithInterface() {
+        List<PersonalInfoInterface> result = userRepository.projectionWithInterface(1);
+        assertThat(result).hasSize(2);
     }
 
 }
