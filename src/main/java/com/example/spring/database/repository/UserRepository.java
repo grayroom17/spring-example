@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -55,5 +56,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Slice<User> findUsersBy(Pageable pageable);
 
     Page<User> findBy(Pageable pageable);
+
+    @EntityGraph("User.company")
+    @Query(value = "select u from User u",
+            countQuery = "select count (distinct u.firstname) from User u")
+    Page<User> getAllBy(Pageable pageable);
+
+    @EntityGraph(attributePaths = {"company", "company.locales"})
+    @Query(value = "select u from User u",
+            countQuery = "select count (distinct u.firstname) from User u")
+    Page<User> getAllUsers(Pageable pageable);
 
 }

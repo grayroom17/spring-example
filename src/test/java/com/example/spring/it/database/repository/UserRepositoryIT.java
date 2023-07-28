@@ -112,4 +112,20 @@ class UserRepositoryIT extends BaseIT {
         assertThat(page.getTotalElements()).isEqualTo(5);
     }
 
+    @Transactional
+    @Test
+    void checkNamedEntityGraph () {
+        PageRequest pageable = PageRequest.of(0, 2, Sort.by("id"));
+        Page<User> page = userRepository.getAllBy(pageable);
+        page.forEach(user -> log.info(user.getCompany().toString()));
+    }
+
+    @Transactional
+    @Test
+    void checkEntityGraph () {
+        PageRequest pageable = PageRequest.of(0, 2, Sort.by("id"));
+        Page<User> page = userRepository.getAllUsers(pageable);
+        page.forEach(user -> log.info(user.getCompany().toString()));
+    }
+
 }
