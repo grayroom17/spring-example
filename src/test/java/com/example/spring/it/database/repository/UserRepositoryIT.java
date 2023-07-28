@@ -7,8 +7,11 @@ import com.example.spring.it.BaseIT;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 class UserRepositoryIT extends BaseIT {
@@ -69,10 +73,43 @@ class UserRepositoryIT extends BaseIT {
 
     @Transactional
     @Test
-    void checkPageable(){
+    void checkPageable() {
         PageRequest pageable = PageRequest.of(1, 2, Sort.by("id"));
         List<User> result = userRepository.findAllBy(pageable);
         assertThat(result).hasSize(2);
+    }
+
+    @Transactional
+    @Test
+    void checkSlice() {
+        PageRequest pageable = PageRequest.of(0, 2, Sort.by("id"));
+        Slice<User> slice = userRepository.findUsersBy(pageable);
+        slice.forEach(user -> log.info(user.getId().toString()));
+        log.info("____________");
+
+        while (slice.hasNext()) {
+            slice = userRepository.findUsersBy(slice.nextPageable());
+            slice.forEach(user -> log.info(user.getId().toString()));
+            log.info("____________");
+        }
+    }
+
+    @Transactional
+    @Test
+    void checkPage() {
+        PageRequest pageable = PageRequest.of(0, 2, Sort.by("id"));
+        Page<User> page = userRepository.findBy(pageable);
+        page.forEach(user -> log.info(user.getId().toString()));
+        log.info("____________");
+
+        while (page.hasNext()) {
+            page = userRepository.findBy(page.nextPageable());
+            page.forEach(user -> log.info(user.getId().toString()));
+            log.info("____________");
+        }
+
+        assertThat(page.getTotalPages()).isEqualTo(3);
+        assertThat(page.getTotalElements()).isEqualTo(5);
     }
 
 }
