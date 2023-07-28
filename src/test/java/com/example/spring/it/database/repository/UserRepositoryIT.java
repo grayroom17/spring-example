@@ -128,4 +128,24 @@ class UserRepositoryIT extends BaseIT {
         page.forEach(user -> log.info(user.getCompany().toString()));
     }
 
+    @Transactional
+    @Test
+    void checkPessimisticRead() {
+        Sort.TypedSort<User> sortBy = Sort.sort(User.class);
+        Sort sort = sortBy.by(User::getFirstname)
+                .and(sortBy.by(User::getLastname));
+        List<User> users = userRepository.getFirst3ByBirthDateBefore(LocalDate.now(), sort.descending());
+        assertThat(users).hasSize(3);
+    }
+
+    @Transactional
+    @Test
+    void checkPessimisticWrite() {
+        Sort.TypedSort<User> sortBy = Sort.sort(User.class);
+        Sort sort = sortBy.by(User::getFirstname)
+                .and(sortBy.by(User::getLastname));
+        List<User> users = userRepository.getTop3ByBirthDateBefore(LocalDate.now(), sort.descending());
+        assertThat(users).hasSize(3);
+    }
+
 }

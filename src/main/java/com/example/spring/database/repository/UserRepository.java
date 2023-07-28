@@ -2,19 +2,20 @@ package com.example.spring.database.repository;
 
 import com.example.spring.entity.Role;
 import com.example.spring.entity.User;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.QueryHint;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import static org.hibernate.jpa.HibernateHints.HINT_FETCH_SIZE;
 
 
 @Repository
@@ -66,5 +67,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "select u from User u",
             countQuery = "select count (distinct u.firstname) from User u")
     Page<User> getAllUsers(Pageable pageable);
+
+    @Lock(LockModeType.PESSIMISTIC_READ)
+    List<User> getFirst3ByBirthDateBefore(LocalDate birthDate, Sort sort);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    List<User> getTop3ByBirthDateBefore(LocalDate birthDate, Sort sort);
+
+    @QueryHints(@QueryHint(name = HINT_FETCH_SIZE, value = "50"))
+    List<User> getTop2ByBirthDateBefore(LocalDate birthDate, Sort sort);
 
 }
