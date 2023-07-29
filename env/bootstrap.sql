@@ -95,3 +95,15 @@ VALUES ((SELECT id FROM users WHERE username = 'ivan@gmail.com'), (SELECT id FRO
        ((SELECT id FROM users WHERE username = 'kate@gmail.com'), (SELECT id FROM chat WHERE name = 'java')),
        ((SELECT id FROM users WHERE username = 'petr@gmail.com'), (SELECT id FROM chat WHERE name = 'database')),
        ((SELECT id FROM users WHERE username = 'kate@gmail.com'), (SELECT id FROM chat WHERE name = 'database'));
+
+ALTER TABLE IF EXISTS users
+ADD COLUMN  IF NOT EXISTS created_at TIMESTAMP;
+
+ALTER TABLE IF EXISTS users
+    ADD COLUMN  IF NOT EXISTS modified_at TIMESTAMP;
+
+ALTER TABLE IF EXISTS users
+    ADD COLUMN  IF NOT EXISTS created_by VARCHAR(32);
+
+ALTER TABLE IF EXISTS users
+    ADD COLUMN  IF NOT EXISTS modified_by VARCHAR(32);

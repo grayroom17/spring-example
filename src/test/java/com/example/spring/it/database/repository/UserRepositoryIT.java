@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -178,6 +179,16 @@ class UserRepositoryIT extends BaseIT {
         UserFilter filter = new UserFilter(null, "%ov%", LocalDate.now());
         List<User> result = userRepository.findAllByFilter(filter);
         assertThat(result).hasSize(4);
+    }
+
+    @Transactional
+    @Test
+    void checkAuditing(){
+        User user = userRepository.findById(1L).orElseThrow();
+        user.setBirthDate(user.getBirthDate().plus(1, ChronoUnit.YEARS));
+        userRepository.flush();
+        assertThat(user.getModifiedAt()).isNotNull();
+        assertThat(user.getModifiedBy()).isNotNull();
     }
 
 }
