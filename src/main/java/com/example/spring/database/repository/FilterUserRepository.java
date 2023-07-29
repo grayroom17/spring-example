@@ -9,4 +9,6 @@ public interface FilterUserRepository {
 
     List<User> findAllByFilter(UserFilter filter);
 
+    List<User> findAllByQueryDslFilter(UserFilter filter);
+
 }

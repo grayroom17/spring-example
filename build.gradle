@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.1.1'
     id "io.spring.dependency-management" version "1.1.2"
     id "io.freefair.lombok" version "8.1.0"
+//    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group 'org.example'
@@ -10,6 +11,10 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+}
+
+configurations {
+    querydsl.extendsFrom annotationProcessor, implementation, compileOnly, runtimeOnly
 }
 
 dependencies {
@@ -28,9 +33,26 @@ dependencies {
 //  версию можно не указывать, т.к. она подтянется из spring.dependency-management
     implementation 'org.postgresql:postgresql'
     implementation 'org.springframework.data:spring-data-envers'
+    implementation "com.querydsl:querydsl-core:5.0.0"
+    implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
 
-    testImplementation ('org.springframework.boot:spring-boot-starter-test')
- }
+    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+//    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+}
+
+//querydsl {
+//    jpa = true
+//    library = "com.querydsl:querydsl-apt:5.0.0"
+//    querydslSourcesDir = "$buildDir/generated/sources/annotationProcessor/java/main"
+//}
+
+//compileQuerydsl {
+//    options.annotationProcessorPath = configurations.querydsl
+//}
 
 test {
     useJUnitPlatform()
