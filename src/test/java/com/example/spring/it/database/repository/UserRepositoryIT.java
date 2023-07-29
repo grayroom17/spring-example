@@ -1,5 +1,6 @@
 package com.example.spring.it.database.repository;
 
+import com.example.spring.database.querydsl.QPredicates;
 import com.example.spring.database.repository.UserRepository;
 import com.example.spring.dto.PersonalInfo;
 import com.example.spring.dto.PersonalInfoInterface;
@@ -7,6 +8,7 @@ import com.example.spring.dto.UserFilter;
 import com.example.spring.entity.Role;
 import com.example.spring.entity.User;
 import com.example.spring.it.BaseIT;
+import com.querydsl.core.types.Predicate;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,12 +18,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.history.Revision;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.spring.entity.QUser.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -177,6 +183,48 @@ class UserRepositoryIT extends BaseIT {
     void checkCustomImplementationUserRepository() {
         UserFilter filter = new UserFilter(null, "%ov%", LocalDate.now());
         List<User> result = userRepository.findAllByFilter(filter);
+        assertThat(result).hasSize(4);
+    }
+
+    @Transactional
+    @Test
+    void checkAuditing() {
+        User user = userRepository.findById(1L).orElseThrow();
+        user.setBirthDate(user.getBirthDate().plus(1, ChronoUnit.YEARS));
+        userRepository.flush();
+        assertThat(user.getModifiedAt()).isNotNull();
+        assertThat(user.getModifiedBy()).isNotNull();
+    }
+
+    @Commit
+    @Transactional
+    @Test
+    void checkHibernateEnvers() {
+        User user = userRepository.findById(2L).orElseThrow();
+        user.setBirthDate(user.getBirthDate().plus(1, ChronoUnit.YEARS));
+        userRepository.flush();
+        Optional<Revision<Integer, User>> lastChangeRevision = userRepository.findLastChangeRevision(2L);
+        assertThat(lastChangeRevision).isNotNull();
+    }
+
+    @Transactional
+    @Test
+    void checkQueryDsl() {
+        UserFilter filter = new UserFilter(null, "ov", LocalDate.now());
+        List<User> result = userRepository.findAllByQueryDslFilter(filter);
+        assertThat(result).hasSize(4);
+    }
+
+    @Transactional
+    @Test
+    void checkQueryDslExecutor() {
+        UserFilter filter = new UserFilter(null, "ov", LocalDate.now());
+        Predicate predicate = QPredicates.builder()
+                .add(filter.firstname(), user.firstname::containsIgnoreCase)
+                .add(filter.lastname(), user.lastname::containsIgnoreCase)
+                .add(filter.birthDate(), user.birthDate::before)
+                .build();
+        List<User> result = (List<User>) userRepository.findAll(predicate);
         assertThat(result).hasSize(4);
     }
 

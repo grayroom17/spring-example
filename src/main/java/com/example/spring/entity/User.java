@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.Builder.Default;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -18,10 +21,11 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "users")
-public class User implements BaseEntity<Long> {
+@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+public class User extends AuditingEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +46,7 @@ public class User implements BaseEntity<Long> {
     @ManyToOne(fetch = FetchType.LAZY)
     Company company;
 
+    @NotAudited
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @Default
