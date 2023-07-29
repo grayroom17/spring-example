@@ -27,6 +27,7 @@ dependencies {
 //    implementation 'org.slf4j:slf4j-simple:2.0.7'
 //  версию можно не указывать, т.к. она подтянется из spring.dependency-management
     implementation 'org.postgresql:postgresql'
+    implementation 'org.springframework.data:spring-data-envers'
 
     testImplementation ('org.springframework.boot:spring-boot-starter-test')
  }

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.history.RevisionRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -21,7 +22,10 @@ import static org.hibernate.jpa.HibernateHints.HINT_FETCH_SIZE;
 
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long>, FilterUserRepository  {
+public interface UserRepository extends
+        JpaRepository<User, Long>,
+        FilterUserRepository,
+        RevisionRepository<User, Long, Integer> {
 
     @Query("""
             select u

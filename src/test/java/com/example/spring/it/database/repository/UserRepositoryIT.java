@@ -16,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.history.Revision;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -183,12 +185,23 @@ class UserRepositoryIT extends BaseIT {
 
     @Transactional
     @Test
-    void checkAuditing(){
+    void checkAuditing() {
         User user = userRepository.findById(1L).orElseThrow();
         user.setBirthDate(user.getBirthDate().plus(1, ChronoUnit.YEARS));
         userRepository.flush();
         assertThat(user.getModifiedAt()).isNotNull();
         assertThat(user.getModifiedBy()).isNotNull();
+    }
+
+    @Commit
+    @Transactional
+    @Test
+    void checkHibernateEnvers() {
+        User user = userRepository.findById(2L).orElseThrow();
+        user.setBirthDate(user.getBirthDate().plus(1, ChronoUnit.YEARS));
+        userRepository.flush();
+        Optional<Revision<Integer, User>> lastChangeRevision = userRepository.findLastChangeRevision(2L);
+        assertThat(lastChangeRevision).isNotNull();
     }
 
 }
