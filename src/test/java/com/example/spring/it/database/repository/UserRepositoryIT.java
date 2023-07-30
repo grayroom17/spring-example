@@ -19,10 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.history.Revision;
-import org.springframework.test.annotation.Commit;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -36,9 +32,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-@Sql({"classpath:sql/bootstrap.sql"})
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@Transactional
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+//@Transactional
 class UserRepositoryIT extends BaseIT {
 
     UserRepository userRepository;
@@ -188,7 +183,7 @@ class UserRepositoryIT extends BaseIT {
         assertThat(user.getModifiedBy()).isNotNull();
     }
 
-    @Commit
+//    @Commit
     @Test
     void checkHibernateEnvers() {
         User user = userRepository.findById(2L).orElseThrow();
