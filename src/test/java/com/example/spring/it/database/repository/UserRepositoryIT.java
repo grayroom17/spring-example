@@ -20,6 +20,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.history.Revision;
 import org.springframework.test.annotation.Commit;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -34,6 +36,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@Sql({"classpath:sql/bootstrap.sql"})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@Transactional
 class UserRepositoryIT extends BaseIT {
 
     UserRepository userRepository;
@@ -44,7 +49,6 @@ class UserRepositoryIT extends BaseIT {
         assertThat(users).hasSize(3);
     }
 
-    @Transactional
     @Test
     void checkUpdate() {
         User user = userRepository.findById(1L).orElseThrow();
@@ -80,7 +84,6 @@ class UserRepositoryIT extends BaseIT {
         assertThat(users).hasSize(3);
     }
 
-    @Transactional
     @Test
     void checkPageable() {
         PageRequest pageable = PageRequest.of(1, 2, Sort.by("id"));
@@ -88,7 +91,6 @@ class UserRepositoryIT extends BaseIT {
         assertThat(result).hasSize(2);
     }
 
-    @Transactional
     @Test
     void checkSlice() {
         PageRequest pageable = PageRequest.of(0, 2, Sort.by("id"));
@@ -103,7 +105,6 @@ class UserRepositoryIT extends BaseIT {
         }
     }
 
-    @Transactional
     @Test
     void checkPage() {
         PageRequest pageable = PageRequest.of(0, 2, Sort.by("id"));
@@ -121,7 +122,6 @@ class UserRepositoryIT extends BaseIT {
         assertThat(page.getTotalElements()).isEqualTo(5);
     }
 
-    @Transactional
     @Test
     void checkNamedEntityGraph() {
         PageRequest pageable = PageRequest.of(0, 2, Sort.by("id"));
@@ -129,7 +129,6 @@ class UserRepositoryIT extends BaseIT {
         page.forEach(user -> log.info(user.getCompany().toString()));
     }
 
-    @Transactional
     @Test
     void checkEntityGraph() {
         PageRequest pageable = PageRequest.of(0, 2, Sort.by("id"));
@@ -137,7 +136,6 @@ class UserRepositoryIT extends BaseIT {
         page.forEach(user -> log.info(user.getCompany().toString()));
     }
 
-    @Transactional
     @Test
     void checkPessimisticRead() {
         Sort.TypedSort<User> sortBy = Sort.sort(User.class);
@@ -147,7 +145,6 @@ class UserRepositoryIT extends BaseIT {
         assertThat(users).hasSize(3);
     }
 
-    @Transactional
     @Test
     void checkPessimisticWrite() {
         Sort.TypedSort<User> sortBy = Sort.sort(User.class);
@@ -157,28 +154,24 @@ class UserRepositoryIT extends BaseIT {
         assertThat(users).hasSize(3);
     }
 
-    @Transactional
     @Test
     void checkProjections() {
         List<PersonalInfo> result = userRepository.findAllByCompanyId(1);
         assertThat(result).hasSize(2);
     }
 
-    @Transactional
     @Test
     void checkTypedProjections() {
         List<PersonalInfo> result = userRepository.findAllByCompanyId(1, PersonalInfo.class);
         assertThat(result).hasSize(2);
     }
 
-    @Transactional
     @Test
     void checkProjectionsWithInterface() {
         List<PersonalInfoInterface> result = userRepository.projectionWithInterface(1);
         assertThat(result).hasSize(2);
     }
 
-    @Transactional
     @Test
     void checkCustomImplementationUserRepository() {
         UserFilter filter = new UserFilter(null, "%ov%", LocalDate.now());
@@ -186,7 +179,6 @@ class UserRepositoryIT extends BaseIT {
         assertThat(result).hasSize(4);
     }
 
-    @Transactional
     @Test
     void checkAuditing() {
         User user = userRepository.findById(1L).orElseThrow();
@@ -197,7 +189,6 @@ class UserRepositoryIT extends BaseIT {
     }
 
     @Commit
-    @Transactional
     @Test
     void checkHibernateEnvers() {
         User user = userRepository.findById(2L).orElseThrow();
@@ -207,7 +198,6 @@ class UserRepositoryIT extends BaseIT {
         assertThat(lastChangeRevision).isNotNull();
     }
 
-    @Transactional
     @Test
     void checkQueryDsl() {
         UserFilter filter = new UserFilter(null, "ov", LocalDate.now());
@@ -215,7 +205,6 @@ class UserRepositoryIT extends BaseIT {
         assertThat(result).hasSize(4);
     }
 
-    @Transactional
     @Test
     void checkQueryDslExecutor() {
         UserFilter filter = new UserFilter(null, "ov", LocalDate.now());
@@ -228,21 +217,18 @@ class UserRepositoryIT extends BaseIT {
         assertThat(result).hasSize(4);
     }
 
-    @Transactional
     @Test
     void checkJdbcTemplate() {
         List<PersonalInfo> users = userRepository.findAllByCompanyIdAndRole(1, Role.USER);
         assertThat(users).isNotNull().hasSize(1);
     }
 
-    @Transactional
     @Test
     void checkJdbcTemplateBatch() {
         List<User> allUsers = userRepository.findAll();
         assertDoesNotThrow(() -> userRepository.updateCompanyAndRole(allUsers));
     }
 
-    @Transactional
     @Test
     void checkNamedJdbcTemplateBatch() {
         List<User> allUsers = userRepository.findAll();
