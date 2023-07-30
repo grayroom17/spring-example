@@ -37,6 +37,7 @@ logging:
   level:
     root: info
     com.example.spring.database.utils.ConnectionPool: warn
+    org.springframework.jdbc.core: TRACE
   file:
     #    path: ./log/log/
     name: ./log/spring-example.log

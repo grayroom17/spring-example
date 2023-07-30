@@ -1,7 +1,9 @@
 package com.example.spring.database.repository;
 
 import com.example.spring.database.querydsl.QPredicates;
+import com.example.spring.dto.PersonalInfo;
 import com.example.spring.dto.UserFilter;
+import com.example.spring.entity.Role;
 import com.example.spring.entity.User;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
@@ -12,6 +14,7 @@ import jakarta.persistence.criteria.Root;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,18 @@ import static com.example.spring.entity.QUser.user;
 public class FilterUserRepositoryImpl implements FilterUserRepository {
 
     EntityManager entityManager;
+
+    JdbcTemplate jdbcTemplate;
+
+    private static final String FIND_BY_COMPANY_AND_ROLE = """
+            select
+            u.firstname,
+            u.lastname,
+            u.birth_date
+            from users u
+            where u.company_id = ?
+            and u.role = ?
+            """;
 
     @Override
     public List<User> findAllByFilter(UserFilter filter) {
@@ -59,6 +74,19 @@ public class FilterUserRepositoryImpl implements FilterUserRepository {
                 .from(user)
                 .where(predicate)
                 .fetch();
+    }
+
+    @Override
+    public List<PersonalInfo> findAllByCompanyIdAndRole(Integer companyId, Role role) {
+        return jdbcTemplate.query(FIND_BY_COMPANY_AND_ROLE,
+                (rs, rowNum) -> new PersonalInfo(
+                        rs.getString("firstname"),
+                        rs.getString("lastname"),
+                        rs.getDate("birth_date").toLocalDate()
+                ),
+                companyId,
+                role.name()
+        );
     }
 
 }
