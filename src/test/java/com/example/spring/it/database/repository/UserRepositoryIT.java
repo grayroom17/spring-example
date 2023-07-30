@@ -228,4 +228,25 @@ class UserRepositoryIT extends BaseIT {
         assertThat(result).hasSize(4);
     }
 
+    @Transactional
+    @Test
+    void checkJdbcTemplate() {
+        List<PersonalInfo> users = userRepository.findAllByCompanyIdAndRole(1, Role.USER);
+        assertThat(users).isNotNull().hasSize(1);
+    }
+
+    @Transactional
+    @Test
+    void checkJdbcTemplateBatch() {
+        List<User> allUsers = userRepository.findAll();
+        assertDoesNotThrow(() -> userRepository.updateCompanyAndRole(allUsers));
+    }
+
+    @Transactional
+    @Test
+    void checkNamedJdbcTemplateBatch() {
+        List<User> allUsers = userRepository.findAll();
+        assertDoesNotThrow(() -> userRepository.updateCompanyAndRoleNamed(allUsers));
+    }
+
 }

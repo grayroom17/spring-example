@@ -10,7 +10,19 @@ spring:
       hibernate:
         format_sql: true
         hbm2ddl:auto: validate
+        jdbc:
+          batch_size: 10
+          fetch_size: 10
 
+
+logging:
+  level:
+    root: info
+    com.example.spring.database.utils.ConnectionPool: warn
+    org.springframework.jdbc.core: TRACE
+  file:
+    #    path: ./log/log/
+    name: ./log/spring-example.log
 
 db:
   username: postgres
@@ -32,11 +44,3 @@ db:
       timeout: 2
     - size: 3
       timeout: 3
-
-logging:
-  level:
-    root: info
-    com.example.spring.database.utils.ConnectionPool: warn
-  file:
-    #    path: ./log/log/
-    name: ./log/spring-example.log

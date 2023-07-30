@@ -1,7 +1,9 @@
 package com.example.spring.database.repository;
 
 import com.example.spring.database.querydsl.QPredicates;
+import com.example.spring.dto.PersonalInfo;
 import com.example.spring.dto.UserFilter;
+import com.example.spring.entity.Role;
 import com.example.spring.entity.User;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
@@ -12,9 +14,13 @@ import jakarta.persistence.criteria.Root;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.example.spring.entity.QUser.user;
 
@@ -23,6 +29,34 @@ import static com.example.spring.entity.QUser.user;
 public class FilterUserRepositoryImpl implements FilterUserRepository {
 
     EntityManager entityManager;
+
+    JdbcTemplate jdbcTemplate;
+
+    NamedParameterJdbcTemplate namedJdbcTemplate;
+
+    private static final String FIND_BY_COMPANY_AND_ROLE = """
+            select
+                u.firstname,
+                u.lastname,
+                u.birth_date
+            from users u
+            where u.company_id = ?
+            and u.role = ?
+            """;
+
+    private static final String UPDATE_COMPANY_AND_ROLE = """
+            update users
+            set company_id = ?,
+                role = ?
+            where id = ?
+            """;
+
+    private static final String UPDATE_COMPANY_AND_ROLE_NAMED = """
+            update users
+            set company_id = :companyId,
+                role = :role
+            where id = :id
+            """;
 
     @Override
     public List<User> findAllByFilter(UserFilter filter) {
@@ -59,6 +93,40 @@ public class FilterUserRepositoryImpl implements FilterUserRepository {
                 .from(user)
                 .where(predicate)
                 .fetch();
+    }
+
+    @Override
+    public List<PersonalInfo> findAllByCompanyIdAndRole(Integer companyId, Role role) {
+        return jdbcTemplate.query(FIND_BY_COMPANY_AND_ROLE,
+                (rs, rowNum) -> new PersonalInfo(
+                        rs.getString("firstname"),
+                        rs.getString("lastname"),
+                        rs.getDate("birth_date").toLocalDate()
+                ),
+                companyId,
+                role.name()
+        );
+    }
+
+    @Override
+    public void updateCompanyAndRole(List<User> users) {
+        List<Object[]> args = users.stream()
+                .map(user -> new Object[]{user.getCompany().getId(), user.getRole().name(), user.getId()})
+                .toList();
+        jdbcTemplate.batchUpdate(UPDATE_COMPANY_AND_ROLE, args);
+    }
+
+    @Override
+    public void updateCompanyAndRoleNamed(List<User> users) {
+        MapSqlParameterSource[] args = users.stream()
+                .map(user -> Map.of(
+                        "companyId", user.getCompany().getId(),
+                        "role", user.getRole().name(),
+                        "id", user.getId()
+                ))
+                .map(MapSqlParameterSource::new)
+                .toArray(MapSqlParameterSource[]::new);
+        namedJdbcTemplate.batchUpdate(UPDATE_COMPANY_AND_ROLE_NAMED, args);
     }
 
 }
