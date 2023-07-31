@@ -23,6 +23,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.apache:tomcat.embeded:tomcat-embeded-jasper'
 //  эти зависимости подтянутся транзитивно из spring-boot-starter
 //  implementation 'org.springframework:spring-core:5.3.28'
 //  implementation 'org.springframework:spring-context:5.3.28'

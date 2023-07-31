@@ -17,6 +17,10 @@ spring:
           fetch_size: 10
   liquibase:
     enabled: true
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp
+      suffix: .jsp
 
 
 logging:
