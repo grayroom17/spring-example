@@ -18,7 +18,7 @@ public class LoginController {
     @PostMapping("/login")
     public String login(Model model,
                         @ModelAttribute("credentials") LoginDto loginDto) {
-        return "user/login";
+        return "redirect:https://www.google.com";
     }
 
 }
