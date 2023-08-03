@@ -5,9 +5,11 @@ import com.example.spring.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ public class UserController {
 
     @GetMapping
     public String findAll(Model model) {
-//        model.addAttribute("users", userService.findAll());
+        model.addAttribute("users", userService.findAll());
 //        model.addAttribute("users", userService.findAll(filter));
         return "user/users";
     }
@@ -27,28 +29,35 @@ public class UserController {
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Long id,
                            Model model) {
-        //        model.addAttribute("user", userService.findById());
-        return "users/user";
+        return userService.findById(id)
+                .map(user -> {
+                    model.addAttribute("user", user);
+                    return "users/user";
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public String create(@ModelAttribute UserCreateEditDto dto) {
-//        userService.create(dto);
-        return "redirect:users/" + 25;
+        return "redirect:users/" + userService.create(dto).getId();
     }
 
     //    @PutMapping("/{id}")
     @PostMapping("/{id}/update")
     public String update(@PathVariable("id") Long id,
                          @ModelAttribute UserCreateEditDto dto) {
-//        userService.update(id, dto);
-        return "redirect:users/{id}";
+        return userService.update(id, dto)
+                .map(user -> "redirect:users/{id}")
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     //    @DeleteMapping("/{id}")
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable("id") Long id) {
-//        userService.delete(id);
+        if (!userService.delete(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
         return "redirect:/users";
     }
 

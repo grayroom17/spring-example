@@ -19,7 +19,7 @@ public class GreetingController {
     public String hello2(Model model,
                          HttpServletRequest request,
                          @ModelAttribute UserReadDto userReadDto) {
-        model.addAttribute("user", new UserReadDto(1L, "Ivan"));
+        model.addAttribute("user", new UserReadDto(1L, "Ivan", null, null, null, null, null));
         return "greeting/hello";
     }
 

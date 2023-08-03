@@ -1,49 +1,62 @@
 package com.example.spring.service;
 
-import com.example.spring.database.repository.CrudRepository;
 import com.example.spring.database.repository.UserRepository;
-import com.example.spring.database.utils.ConnectionPool;
-import com.example.spring.entity.Department;
+import com.example.spring.dto.UserCreateEditDto;
+import com.example.spring.dto.UserReadDto;
+import com.example.spring.mapper.UserMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class UserService {
 
-    CrudRepository<Integer, Department> departmentRepository;
-
     UserRepository userRepository;
 
-    @Qualifier("pool1")
-    ConnectionPool connectionPool;
+    UserMapper userMapper;
 
-    ConnectionPool pool1;
-
-    @NonFinal
-    ConnectionPool duplicatePool2;
-
-    List<ConnectionPool> pools;
-
-    @Value("${db.pool.size}")
-    @NonFinal
-    Integer poolSize;
-
-    public ConnectionPool getDuplicatePool2() {
-        return duplicatePool2;
+    public List<UserReadDto> findAll() {
+        return userMapper.toReadDtoList(userRepository.findAll());
     }
 
-    @Autowired
-    public void setDuplicatePool2(ConnectionPool pool1) {
-        this.duplicatePool2 = pool1;
+    public Optional<UserReadDto> findById(Long id) {
+        return userRepository.findById(id)
+                .map(userMapper::toReadDto);
     }
+
+    @Transactional
+    public UserReadDto create(UserCreateEditDto dto) {
+        return Optional.of(dto)
+                .map(userMapper::fromUserCreateEditDto)
+                .map(userRepository::save)
+                .map(userMapper::toReadDto)
+                .orElseThrow();
+    }
+
+    @Transactional
+    public Optional<UserReadDto> update(Long id, UserCreateEditDto dto) {
+        return userRepository.findById(id)
+                .map(user -> userMapper.updateFromCreateEditDto(user, dto))
+                .map(userMapper::toReadDto);
+    }
+
+    @Transactional
+    public boolean delete(Long id) {
+        return userRepository.findById(id)
+                .map(user -> {
+                    userRepository.delete(user);
+                    return true;
+                })
+                .orElse(false);
+    }
+
+
 }
