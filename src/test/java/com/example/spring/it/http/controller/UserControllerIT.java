@@ -46,7 +46,7 @@ class UserControllerIT extends BaseIT {
                 )
                 .andExpectAll(
                         status().is3xxRedirection()
-//                        , redirectedUrlPattern("/users/{\\d+}")
+                        , redirectedUrlPattern("users/{\\d+}")
                 );
     }
 
