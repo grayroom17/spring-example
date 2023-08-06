@@ -1,6 +1,8 @@
 package com.example.spring.http.controller;
 
 import com.example.spring.dto.UserCreateEditDto;
+import com.example.spring.entity.Role;
+import com.example.spring.service.CompanyService;
 import com.example.spring.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserController {
 
     UserService userService;
+    CompanyService companyService;
 
     @GetMapping
     public String findAll(Model model) {
@@ -32,7 +35,9 @@ public class UserController {
         return userService.findById(id)
                 .map(user -> {
                     model.addAttribute("user", user);
-                    return "users/user";
+                    model.addAttribute("roles", Role.values());
+                    model.addAttribute("companies", companyService.findAll());
+                    return "user/user";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
@@ -40,7 +45,7 @@ public class UserController {
     @PostMapping
 //    @ResponseStatus(HttpStatus.CREATED)
     public String create(@ModelAttribute UserCreateEditDto dto) {
-        return "redirect:users/" + userService.create(dto).getId();
+        return "redirect:/users/" + userService.create(dto).getId();
     }
 
     //    @PutMapping("/{id}")
@@ -48,7 +53,7 @@ public class UserController {
     public String update(@PathVariable("id") Long id,
                          @ModelAttribute UserCreateEditDto dto) {
         return userService.update(id, dto)
-                .map(user -> "redirect:users/{id}")
+                .map(user -> "redirect:/users/{id}")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 

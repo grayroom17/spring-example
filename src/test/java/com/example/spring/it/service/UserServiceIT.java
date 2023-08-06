@@ -39,7 +39,7 @@ class UserServiceIT extends BaseIT {
         assertThat(user.getRole()).isEqualTo(Role.ADMIN);
         assertThat(user.getBirthDate()).isEqualTo(LocalDate.of(1990, 1, 10));
         assertThat(user.getUsername()).isEqualTo("ivan@gmail.com");
-        assertThat(user.getCompanyId()).isEqualTo(1);
+        assertThat(user.getCompany().id()).isEqualTo(1);
     }
 
     @Test
@@ -62,7 +62,7 @@ class UserServiceIT extends BaseIT {
         assertThat(userReadDto.getRole()).isEqualTo(dto.getRole());
         assertThat(userReadDto.getBirthDate()).isEqualTo(dto.getBirthDate());
         assertThat(userReadDto.getUsername()).isEqualTo(dto.getUsername());
-        assertThat(userReadDto.getCompanyId()).isEqualTo(dto.getCompanyId());
+        assertThat(userReadDto.getCompany().id()).isEqualTo(dto.getCompanyId());
     }
 
     @Test
@@ -85,7 +85,7 @@ class UserServiceIT extends BaseIT {
         assertThat(user.getRole()).isEqualTo(dto.getRole());
         assertThat(user.getBirthDate()).isEqualTo(dto.getBirthDate());
         assertThat(user.getUsername()).isEqualTo(dto.getUsername());
-        assertThat(user.getCompanyId()).isEqualTo(dto.getCompanyId());
+        assertThat(user.getCompany().id()).isEqualTo(dto.getCompanyId());
     }
 
     @Test

@@ -21,7 +21,6 @@ public abstract class UserMapper {
     @Autowired
     CompanyRepository companyRepository;
 
-    @Mapping(target = "companyId", source = "user.company.id")
     public abstract UserReadDto toReadDto(User user);
 
     public abstract List<UserReadDto> toReadDtoList(List<User> users);
