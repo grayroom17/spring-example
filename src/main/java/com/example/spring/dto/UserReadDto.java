@@ -20,6 +20,6 @@ public class UserReadDto {
 
     Role role;
 
-    Integer companyId;
+    CompanyReadDto company;
 
 }

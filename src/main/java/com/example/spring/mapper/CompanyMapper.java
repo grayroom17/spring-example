@@ -9,8 +9,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface CompanyMapper {
 
-    CompanyReadDto toReadDto(Company user);
+    CompanyReadDto toReadDto(Company company);
 
-    List<CompanyReadDto> toListReadDto(List<Company> users);
+    List<CompanyReadDto> toReadDtoList(List<Company> companies);
 
 }
