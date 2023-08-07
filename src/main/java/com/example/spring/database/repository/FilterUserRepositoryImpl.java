@@ -66,10 +66,10 @@ public class FilterUserRepositoryImpl implements FilterUserRepository {
         Root<User> user = criteria.from(User.class);
 
         List<Predicate> predicates = new ArrayList<>();
-        if (filter.firstname() != null) {
+        if (filter.firstname() != null && !filter.firstname().isEmpty() && !filter.firstname().isBlank()) {
             predicates.add(cb.like(user.get("firstname"), filter.firstname()));
         }
-        if (filter.lastname() != null) {
+        if (filter.lastname() != null && !filter.lastname().isEmpty() && !filter.lastname().isBlank()) {
             predicates.add(cb.like(user.get("lastname"), filter.lastname()));
         }
         if (filter.birthDate() != null) {

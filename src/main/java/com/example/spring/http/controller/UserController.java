@@ -1,6 +1,7 @@
 package com.example.spring.http.controller;
 
 import com.example.spring.dto.UserCreateEditDto;
+import com.example.spring.dto.UserFilter;
 import com.example.spring.entity.Role;
 import com.example.spring.service.CompanyService;
 import com.example.spring.service.UserService;
@@ -23,9 +24,9 @@ public class UserController {
     CompanyService companyService;
 
     @GetMapping
-    public String findAll(Model model) {
-        model.addAttribute("users", userService.findAll());
-//        model.addAttribute("users", userService.findAll(filter));
+    public String findAll(Model model, UserFilter filter) {
+//        model.addAttribute("users", userService.findAll());
+        model.addAttribute("users", userService.findAll(filter));
         return "user/users";
     }
 

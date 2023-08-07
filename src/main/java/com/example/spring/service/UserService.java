@@ -2,6 +2,7 @@ package com.example.spring.service;
 
 import com.example.spring.database.repository.UserRepository;
 import com.example.spring.dto.UserCreateEditDto;
+import com.example.spring.dto.UserFilter;
 import com.example.spring.dto.UserReadDto;
 import com.example.spring.mapper.UserMapper;
 import lombok.AccessLevel;
@@ -25,6 +26,10 @@ public class UserService {
 
     public List<UserReadDto> findAll() {
         return userMapper.toReadDtoList(userRepository.findAll());
+    }
+
+    public List<UserReadDto> findAll(UserFilter filter) {
+        return userMapper.toReadDtoList(userRepository.findAllByQueryDslFilter(filter));
     }
 
     public Optional<UserReadDto> findById(Long id) {
