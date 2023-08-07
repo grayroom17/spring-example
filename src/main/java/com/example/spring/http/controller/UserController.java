@@ -1,12 +1,17 @@
 package com.example.spring.http.controller;
 
+import com.example.spring.dto.PageResponse;
 import com.example.spring.dto.UserCreateEditDto;
+import com.example.spring.dto.UserFilter;
+import com.example.spring.dto.UserReadDto;
 import com.example.spring.entity.Role;
 import com.example.spring.service.CompanyService;
 import com.example.spring.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,9 +28,11 @@ public class UserController {
     CompanyService companyService;
 
     @GetMapping
-    public String findAll(Model model) {
-        model.addAttribute("users", userService.findAll());
-//        model.addAttribute("users", userService.findAll(filter));
+    public String findAll(Model model, UserFilter filter, Pageable pageable) {
+//        model.addAttribute("users", userService.findAll());
+        Page<UserReadDto> page = userService.findAll(filter, pageable);
+        model.addAttribute("users", PageResponse.of(page));
+        model.addAttribute("filter", filter);
         return "user/users";
     }
 

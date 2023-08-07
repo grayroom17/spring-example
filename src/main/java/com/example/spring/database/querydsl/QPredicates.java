@@ -2,12 +2,14 @@ package com.example.spring.database.querydsl;
 
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.Expressions;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -28,11 +30,13 @@ public class QPredicates {
     }
 
     public Predicate build() {
-        return ExpressionUtils.allOf(predicates);
+        return Optional.ofNullable(ExpressionUtils.allOf(predicates))
+                .orElseGet(() -> Expressions.asBoolean(true).isTrue());
     }
 
     public Predicate buildOr() {
-        return ExpressionUtils.anyOf(predicates);
+        return Optional.ofNullable(ExpressionUtils.anyOf(predicates))
+                .orElseGet(() -> Expressions.asBoolean(true).isTrue());
     }
 
 }
