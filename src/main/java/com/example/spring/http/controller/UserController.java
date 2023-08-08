@@ -7,6 +7,9 @@ import com.example.spring.dto.UserReadDto;
 import com.example.spring.entity.Role;
 import com.example.spring.service.CompanyService;
 import com.example.spring.service.UserService;
+import com.example.spring.validation.group.CreateMarker;
+import com.example.spring.validation.group.UpdateMarker;
+import jakarta.validation.groups.Default;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -63,7 +66,7 @@ public class UserController {
 
     @PostMapping
 //    @ResponseStatus(HttpStatus.CREATED)
-    public String create(@ModelAttribute @Validated UserCreateEditDto dto,
+    public String create(@ModelAttribute @Validated({Default.class, CreateMarker.class}) UserCreateEditDto dto,
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -77,7 +80,7 @@ public class UserController {
     //    @PutMapping("/{id}")
     @PostMapping("/{id}/update")
     public String update(@PathVariable("id") Long id,
-                         @ModelAttribute @Validated UserCreateEditDto dto) {
+                         @ModelAttribute @Validated({Default.class, UpdateMarker.class}) UserCreateEditDto dto) {
         return userService.update(id, dto)
                 .map(user -> "redirect:/users/{id}")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

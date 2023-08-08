@@ -1,8 +1,9 @@
 package com.example.spring.dto;
 
 import com.example.spring.entity.Role;
+import com.example.spring.validation.UserInfo;
+import com.example.spring.validation.group.CreateMarker;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Value;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @Value
 @Builder
 @FieldNameConstants
+@UserInfo(groups = CreateMarker.class)
 public class UserCreateEditDto {
 
     @Email
@@ -22,11 +24,9 @@ public class UserCreateEditDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     LocalDate birthDate;
 
-    @NotNull
     @Size(min = 3, max = 64)
     String firstname;
 
-    @NotNull
     String lastname;
 
     Role role;
