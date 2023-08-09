@@ -1,12 +1,13 @@
 package com.example.spring.handler;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Slf4j
-@ControllerAdvice(basePackages = "com.example.spring.http.controller")
-public class ControllerExceptionHandler {
+@RestControllerAdvice(basePackages = "com.example.spring.rest")
+public class RestControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public String handleException(Exception e) {
