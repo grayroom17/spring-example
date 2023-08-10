@@ -40,6 +40,8 @@ public class User extends AuditingEntity<Long> {
 
     String lastname;
 
+    String image;
+
     @Enumerated(EnumType.STRING)
     Role role;
 
