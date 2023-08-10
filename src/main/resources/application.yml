@@ -24,6 +24,9 @@ spring:
     format:
       date: iso
 
+springdoc:
+  swagger-ui:
+    enabled: true
 
 logging:
   level:
@@ -33,7 +36,6 @@ logging:
   file:
     #    path: ./log/log/
     name: ./log/spring-example.log
-
 db:
   username: postgres
   password: postgres
@@ -54,3 +56,4 @@ db:
       timeout: 2
     - size: 3
       timeout: 3
+

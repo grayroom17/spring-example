@@ -10,8 +10,12 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
+
+import static java.util.function.Predicate.not;
 
 @Mapper(componentModel = "spring",
         uses = CompanyMapper.class,
@@ -27,25 +31,39 @@ public abstract class UserMapper {
 
     public User fromUserCreateEditDto(UserCreateEditDto dto) {
         Company company = companyRepository.findById(dto.getCompanyId()).orElseThrow();
-        return fromUserCreateEditDto(dto, company);
+        String imageFileName = getImageFileName(dto);
+        return fromUserCreateEditDto(dto, company, imageFileName);
     }
 
 
     @Mapping(target = "company", source = "company")
+    @Mapping(target = "image", source = "image")
     @Mapping(target = "userChats", ignore = true)
-    public abstract User fromUserCreateEditDto(UserCreateEditDto dto, Company company);
+    public abstract User fromUserCreateEditDto(UserCreateEditDto dto, Company company, String image);
 
     public User updateFromCreateEditDto(User updatable, UserCreateEditDto updating) {
         Company company = companyRepository.findById(updating.getCompanyId()).orElseThrow();
-        return updateFromCreateEditDto(updatable, updating, company);
+        String imageFileName = getImageFileName(updating);
+        return updateFromCreateEditDto(updatable, updating, company, imageFileName);
     }
 
+    @Mapping(target = "image", source = "image")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "modifiedAt", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "userChats", ignore = true)
-    public abstract User updateFromCreateEditDto(@MappingTarget User updatable, UserCreateEditDto updating, Company company);
+    public abstract User updateFromCreateEditDto(@MappingTarget User updatable, UserCreateEditDto updating, Company company, String image);
+
+    private static String getImageFileName(UserCreateEditDto updating) {
+        MultipartFile image = Optional.ofNullable(updating.getImage())
+                .filter(not(MultipartFile::isEmpty)).orElse(null);
+        String imageFileName = null;
+        if (image != null) {
+            imageFileName = image.getOriginalFilename();
+        }
+        return imageFileName;
+    }
 
 }

@@ -9,11 +9,13 @@ import com.example.spring.mapper.UserMapper;
 import com.querydsl.core.types.Predicate;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +31,8 @@ public class UserService {
     UserRepository userRepository;
 
     UserMapper userMapper;
+
+    ImageService imageService;
 
     public List<UserReadDto> findAll() {
         return userMapper.toReadDtoList(userRepository.findAll());
@@ -52,9 +56,12 @@ public class UserService {
     }
 
     @Transactional
-    public UserReadDto create(UserCreateEditDto dto) {
-        return Optional.of(dto)
-                .map(userMapper::fromUserCreateEditDto)
+    public UserReadDto create(UserCreateEditDto userDto) {
+        return Optional.of(userDto)
+                .map(dto -> {
+                    uploadImage(dto.getImage());
+                    return userMapper.fromUserCreateEditDto(dto);
+                })
                 .map(userRepository::save)
                 .map(userMapper::toReadDto)
                 .orElseThrow();
@@ -63,7 +70,10 @@ public class UserService {
     @Transactional
     public Optional<UserReadDto> update(Long id, UserCreateEditDto dto) {
         return userRepository.findById(id)
-                .map(user -> userMapper.updateFromCreateEditDto(user, dto))
+                .map(user -> {
+                    uploadImage(dto.getImage());
+                    return userMapper.updateFromCreateEditDto(user, dto);
+                })
                 .map(userMapper::toReadDto);
     }
 
@@ -77,5 +87,11 @@ public class UserService {
                 .orElse(false);
     }
 
+    @SneakyThrows
+    private void uploadImage(MultipartFile image) {
+        if (!image.isEmpty()) {
+            imageService.upload(image.getOriginalFilename(), image.getInputStream());
+        }
+    }
 
 }
