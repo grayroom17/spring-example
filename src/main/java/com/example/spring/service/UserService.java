@@ -5,6 +5,7 @@ import com.example.spring.database.repository.UserRepository;
 import com.example.spring.dto.UserCreateEditDto;
 import com.example.spring.dto.UserFilter;
 import com.example.spring.dto.UserReadDto;
+import com.example.spring.entity.User;
 import com.example.spring.mapper.UserMapper;
 import com.querydsl.core.types.Predicate;
 import lombok.AccessLevel;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -53,6 +55,13 @@ public class UserService {
     public Optional<UserReadDto> findById(Long id) {
         return userRepository.findById(id)
                 .map(userMapper::toReadDto);
+    }
+
+    public Optional<byte[]> findAvatar(Long id) {
+        return userRepository.findById(id)
+                .map(User::getImage)
+                .filter(StringUtils::hasText)
+                .flatMap(imageService::get);
     }
 
     @Transactional
