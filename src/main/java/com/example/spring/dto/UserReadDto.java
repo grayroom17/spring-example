@@ -22,4 +22,6 @@ public class UserReadDto {
 
     CompanyReadDto company;
 
+    String image;
+
 }
