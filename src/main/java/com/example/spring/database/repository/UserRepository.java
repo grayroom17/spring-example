@@ -99,4 +99,5 @@ public interface UserRepository extends
                     """)
     List<PersonalInfoInterface> projectionWithInterface(Integer companyId);
 
+    Optional<User> findByUsername(String username);
 }
