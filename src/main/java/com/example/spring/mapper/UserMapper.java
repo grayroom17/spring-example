@@ -39,6 +39,7 @@ public abstract class UserMapper {
     @Mapping(target = "company", source = "company")
     @Mapping(target = "image", source = "image")
     @Mapping(target = "userChats", ignore = true)
+    @Mapping(target = "password", ignore = true)
     public abstract User fromUserCreateEditDto(UserCreateEditDto dto, Company company, String image);
 
     public User updateFromCreateEditDto(User updatable, UserCreateEditDto updating) {
@@ -54,6 +55,7 @@ public abstract class UserMapper {
     @Mapping(target = "modifiedBy", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "userChats", ignore = true)
+    @Mapping(target = "password", ignore = true)
     public abstract User updateFromCreateEditDto(@MappingTarget User updatable, UserCreateEditDto updating, Company company, String image);
 
     private static String getImageFileName(UserCreateEditDto updating) {
