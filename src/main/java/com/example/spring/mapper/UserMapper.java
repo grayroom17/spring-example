@@ -10,6 +10,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -25,6 +27,9 @@ public abstract class UserMapper {
     @Autowired
     CompanyRepository companyRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     public abstract UserReadDto toReadDto(User user);
 
     public abstract List<UserReadDto> toReadDtoList(List<User> users);
@@ -32,15 +37,19 @@ public abstract class UserMapper {
     public User fromUserCreateEditDto(UserCreateEditDto dto) {
         Company company = companyRepository.findById(dto.getCompanyId()).orElseThrow();
         String imageFileName = getImageFileName(dto);
-        return fromUserCreateEditDto(dto, company, imageFileName);
+        String password = Optional.ofNullable(dto.getRawPassword())
+                .filter(StringUtils::hasText)
+                .map(passwordEncoder::encode)
+                .orElse(null);
+        return fromUserCreateEditDto(dto, password, company, imageFileName);
     }
 
 
     @Mapping(target = "company", source = "company")
     @Mapping(target = "image", source = "image")
+    @Mapping(target = "password", source = "password")
     @Mapping(target = "userChats", ignore = true)
-    @Mapping(target = "password", ignore = true)
-    public abstract User fromUserCreateEditDto(UserCreateEditDto dto, Company company, String image);
+    public abstract User fromUserCreateEditDto(UserCreateEditDto dto, String password, Company company, String image);
 
     public User updateFromCreateEditDto(User updatable, UserCreateEditDto updating) {
         Company company = companyRepository.findById(updating.getCompanyId()).orElseThrow();
