@@ -7,24 +7,36 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import static com.example.spring.entity.Role.ADMIN;
 
 @Configuration
 public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(requests -> requests.anyRequest().authenticated())
+        http.authorizeHttpRequests(requests -> requests
+                        .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/users/registration")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher( "/users/{\\d+}/delete")).hasAuthority(ADMIN.getAuthority())
+                        .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority(ADMIN.getAuthority())
+                        .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
 //                .httpBasic(Customizer.withDefaults());
+                .logout(logout -> logout.logoutUrl("/logout")
+                        .logoutSuccessUrl("/login")
+                        .deleteCookies("JSSESSIONID"))
                 .formLogin(login -> login.loginPage("/login")
-                        .defaultSuccessUrl("/users")
-                        .permitAll());
+                        .defaultSuccessUrl("/users"));
 
         return http.build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
