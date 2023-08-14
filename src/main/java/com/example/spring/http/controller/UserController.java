@@ -74,7 +74,8 @@ public class UserController {
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/users/registration";
         }
-        return "redirect:/users/" + userService.create(dto).getId();
+        userService.create(dto);
+        return "redirect:/login";
     }
 
     //    @PutMapping("/{id}")
