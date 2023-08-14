@@ -13,6 +13,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests -> requests.anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
+//                .httpBasic(Customizer.withDefaults());
                 .formLogin(login -> login.loginPage("/login")
                         .defaultSuccessUrl("/users")
                         .permitAll());
