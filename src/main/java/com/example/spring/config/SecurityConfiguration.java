@@ -16,6 +16,9 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(requests -> requests.anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
 //                .httpBasic(Customizer.withDefaults());
+                .logout(logout -> logout.logoutUrl("/logout")
+                        .logoutSuccessUrl("/login")
+                        .deleteCookies("JSSESSIONID"))
                 .formLogin(login -> login.loginPage("/login")
                         .defaultSuccessUrl("/users")
                         .permitAll());
@@ -24,7 +27,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
