@@ -44,6 +44,8 @@ public class UserService implements UserDetailsService {
         return userMapper.toReadDtoList(userRepository.findAll());
     }
 
+//    @PostFilter("filterObject.role.name().equals('ADMIN')")
+//    @PostFilter("@companyService.findById(filterObject.company.id()).present")
     public Page<UserReadDto> findAll(UserFilter filter, Pageable pageable) {
 //        return userMapper.toReadDtoList(userRepository.findAllByQueryDslFilter(filter));
         Predicate predicate = QPredicates.builder()
