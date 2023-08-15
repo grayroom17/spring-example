@@ -7,15 +7,14 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.envers.repository.config.EnableEnversRepositories;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-import java.util.Optional;
-
-@EnableJpaAuditing
+@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @EnableEnversRepositories(basePackageClasses = ApplicationRunner.class)
 @Configuration
 public class AuditConfiguration {
 
     @Bean
-    public AuditorAware<String> auditorAware() {
-        return () -> Optional.of("current user");
+    AuditorAware<String> auditorAware() {
+        return new AuditorAwareImpl();
     }
+
 }
