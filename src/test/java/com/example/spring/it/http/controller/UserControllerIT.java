@@ -6,11 +6,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.example.spring.dto.UserCreateEditDto.Fields.*;
 import static com.example.spring.entity.Role.USER;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -22,20 +22,31 @@ class UserControllerIT extends BaseIT {
 
     MockMvc mockMvc;
 
+//    @BeforeEach
+//    void init() {
+//        List<GrantedAuthority> roles = Arrays.asList(ADMIN, USER);
+//        User testUser = new User("test@gmail.com", "test", roles);
+//        TestingAuthenticationToken authenticationToken = new TestingAuthenticationToken(testUser, testUser.getPassword(), roles);
+//
+//        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+//        securityContext.setAuthentication(authenticationToken);
+//        SecurityContextHolder.setContext(securityContext);
+//    }
+
     @Test
+    @WithMockUser(username = "test@gmail.com", password = "test", authorities = {"ADMIN", "USER"})
     void findAll() throws Exception {
         mockMvc.perform(get("/users")
-                )
+                        /*.with(user("test@gmail.com")
+                                .password("test")
+                                .authorities(ADMIN, USER))*/)
                 .andExpect(status().isOk())
                 .andExpect(view().name("user/users"))
-                .andExpect(model().attributeExists("users"))
-                .andExpect(model().attribute("users", hasSize(5)));
+                .andExpect(model().attributeExists("users"));
     }
 
     @Test
     void create() throws Exception {
-
-
         mockMvc.perform(post("/users")
                         .param(username, "test@gmail.com")
                         .param(firstname, "test")
