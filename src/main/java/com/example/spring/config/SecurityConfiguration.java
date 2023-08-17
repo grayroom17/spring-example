@@ -23,7 +23,7 @@ public class SecurityConfiguration {
                         .requestMatchers(new AntPathRequestMatcher("/users/registration")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher( "/users/{\\d+}/delete")).hasAuthority(ADMIN.getAuthority())
+                        .requestMatchers(new AntPathRequestMatcher("/users/{\\d+}/delete")).hasAuthority(ADMIN.getAuthority())
                         .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority(ADMIN.getAuthority())
                         .anyRequest().authenticated())
                 .csrf(Customizer.withDefaults())
@@ -31,7 +31,11 @@ public class SecurityConfiguration {
                 .logout(logout -> logout.logoutUrl("/logout")
                         .logoutSuccessUrl("/login")
                         .deleteCookies("JSSESSIONID"))
-                .formLogin(login -> login.loginPage("/login")
+                .formLogin(login -> login
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/users"))
+                .oauth2Login(config -> config
+                        .loginPage("/login")
                         .defaultSuccessUrl("/users"));
 
         return http.build();
