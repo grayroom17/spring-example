@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -46,11 +47,13 @@ class UserServiceIT extends BaseIT {
     void create() {
         UserCreateEditDto dto = UserCreateEditDto.builder()
                 .username("test@gmail.com")
+                .rawPassword("password")
                 .firstname("test")
                 .lastname("test")
                 .companyId(1)
                 .role(Role.USER)
                 .birthDate(LocalDate.of(1999, 9, 9))
+                .image(new MockMultipartFile("test", new byte[0]))
                 .build();
 
         UserReadDto userReadDto = userService.create(dto);
@@ -69,11 +72,13 @@ class UserServiceIT extends BaseIT {
     void update() {
         UserCreateEditDto dto = UserCreateEditDto.builder()
                 .username("test@gmail.com")
+                .rawPassword("password")
                 .firstname("test")
                 .lastname("test")
                 .companyId(1)
                 .role(Role.USER)
                 .birthDate(LocalDate.of(1999, 9, 9))
+                .image(new MockMultipartFile("test", new byte[0]))
                 .build();
 
         UserReadDto user = userService.update(1L, dto).orElseThrow();
