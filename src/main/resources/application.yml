@@ -23,6 +23,15 @@ spring:
       suffix: .jsp
     format:
       date: iso
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: there must be client id
+            client-secret: there must be client secret
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            scope: openid,email,profile
 
 springdoc:
   swagger-ui:
@@ -36,6 +45,8 @@ logging:
   file:
     #    path: ./log/log/
     name: ./log/spring-example.log
+
+
 db:
   username: postgres
   password: postgres
