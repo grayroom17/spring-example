@@ -36,6 +36,11 @@ spring:
 springdoc:
   swagger-ui:
     enabled: true
+    oauth:
+      client-id: 352025992724-p1q7vq8odtf2r1apqcdq408ou3c7nsbr.apps.googleusercontent.com
+      client-secret: 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
+      scopes: openid,email,profile
+    oauth2-redirect-url: http://localhost:8080/swagger-ui/oauth2-redirect.html
 
 logging:
   level:
