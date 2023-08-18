@@ -28,14 +28,19 @@ spring:
       client:
         registration:
           google:
-            client-id: 352025992724-p1q7vq8odtf2r1apqcdq408ou3c7nsbr.apps.googleusercontent.com
-            client-secret: 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
+            client-id: there must be client id
+            client-secret: there must be client secret
             redirect-uri: http://localhost:8080/login/oauth2/code/google
             scope: openid,email,profile
 
 springdoc:
   swagger-ui:
     enabled: true
+    oauth:
+      client-id: there must be client id
+      client-secret: there must be client secret
+      scopes: openid,email,profile
+    oauth2-redirect-url: http://localhost:8080/swagger-ui/oauth2-redirect.html
 
 logging:
   level:
