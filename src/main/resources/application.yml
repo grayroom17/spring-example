@@ -4,6 +4,7 @@ spring:
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+
   jpa:
     show-sql: true
     hibernate:
@@ -15,6 +16,7 @@ spring:
         jdbc:
           batch_size: 10
           fetch_size: 10
+
   liquibase:
     enabled: true
   mvc:
@@ -23,6 +25,7 @@ spring:
       suffix: .jsp
     format:
       date: iso
+
   security:
     oauth2:
       client:
@@ -33,12 +36,15 @@ spring:
             redirect-uri: http://localhost:8080/login/oauth2/code/google
             scope: openid,email,profile
 
+  messages:
+    basename: messages
+
 springdoc:
   swagger-ui:
     enabled: true
     oauth:
-      client-id: there must be client id
-      client-secret: there must be client secret
+      client-id: ${spring.security.oauth2.client.registration.google.client-id}
+      client-secret: ${spring.security.oauth2.client.registration.google.client-secret}
       scopes: openid,email,profile
     oauth2-redirect-url: http://localhost:8080/swagger-ui/oauth2-redirect.html
 
