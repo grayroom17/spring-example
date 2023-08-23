@@ -1,4 +1,4 @@
-package com.example.spring.aop;
+package com.example.logging.aop;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -9,8 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Aspect
-@Component
-@Order(1)
 public class FirstAspect {
 
     /*
@@ -25,7 +23,7 @@ public class FirstAspect {
     /*
         @annotation - check annotation on method level
      */
-    @Pointcut("com.example.spring.aop.CommonPointcuts.isControllerLayer() && @annotation(org.springframework.web.bind.annotation.GetMapping)")
+    @Pointcut("com.example.logging.aop.CommonPointcuts.isControllerLayer() && @annotation(org.springframework.web.bind.annotation.GetMapping)")
     public void hasGetMapping() {
     }
 
@@ -34,7 +32,7 @@ public class FirstAspect {
         * - any param type
         .. - 0 or many params type
      */
-    @Pointcut("com.example.spring.aop.CommonPointcuts.isControllerLayer() && args(org.springframework.ui.Model,..)")
+    @Pointcut("com.example.logging.aop.CommonPointcuts.isControllerLayer() && args(org.springframework.ui.Model,..)")
     public void hamModelParam() {
     }
 
@@ -43,7 +41,7 @@ public class FirstAspect {
         * - any param type
         .. - 0 or many params type
      */
-    @Pointcut("com.example.spring.aop.CommonPointcuts.isControllerLayer() && @args(com.example.spring.validation.UserInfo,..)")
+    @Pointcut("com.example.logging.aop.CommonPointcuts.isControllerLayer() && @args(com.example.spring.validation.UserInfo,..)")
     public void hasUserInfoParamAnnotation() {
     }
 
@@ -57,7 +55,7 @@ public class FirstAspect {
     /*
         execution(modifiers-pattern? ret-type-pattern declaring-type-pattern?name-pattern(param-pattern) throws-pattern?)
      */
-    @Pointcut("execution(public * com.example.spring.service.*Service.findById(*)) ")
+    @Pointcut("execution(public * com.example.*.service.*Service.findById(*)) ")
     public void anyFindByIdServiceMethod() {
     }
 

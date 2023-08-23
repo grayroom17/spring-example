@@ -1,2 +1,3 @@
 rootProject.name = 'spring-example'
 
+include 'common-logging-starter'
