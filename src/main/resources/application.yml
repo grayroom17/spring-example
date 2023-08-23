@@ -57,6 +57,11 @@ logging:
     #    path: ./log/log/
     name: ./log/spring-example.log
 
+app:
+  common:
+    logging:
+      enabled: true
+      level: INFO
 
 db:
   username: postgres
